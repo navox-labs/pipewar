@@ -53,7 +53,7 @@ export function GameOverModal() {
       >
         <div
           style={{
-            fontSize: 32,
+            fontSize: 36,
             fontWeight: 700,
             color: won ? "#34d399" : "#f43f5e",
             marginBottom: 8,
@@ -80,7 +80,7 @@ export function GameOverModal() {
                 display: "flex",
                 justifyContent: "space-between",
                 marginBottom: 8,
-                fontSize: 14,
+                fontSize: 18,
               }}
             >
               <span style={{ color: "#6b7280" }}>{label}</span>

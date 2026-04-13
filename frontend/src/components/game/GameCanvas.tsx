@@ -55,7 +55,7 @@ export function GameCanvas({ onCellClick, onCellHover }: Props) {
       ctx.stroke();
     }
 
-    ctx.font = `16px 'JetBrains Mono', monospace`;
+    ctx.font = `20px 'JetBrains Mono', monospace`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
@@ -248,7 +248,7 @@ export function GameCanvas({ onCellClick, onCellHover }: Props) {
         ctx.fillStyle = COLORS.attacker;
         ctx.font = `14px 'JetBrains Mono', monospace`;
         ctx.fillText("◆", ax, ay);
-        ctx.font = `16px 'JetBrains Mono', monospace`;
+        ctx.font = `20px 'JetBrains Mono', monospace`;
       }
     }
 

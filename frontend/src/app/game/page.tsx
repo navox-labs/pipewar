@@ -9,6 +9,7 @@ import { BuildPanel } from "@/components/game/BuildPanel";
 import { MetricsPanel } from "@/components/game/MetricsPanel";
 import { WaveAlert } from "@/components/game/WaveAlert";
 import { GameOverModal } from "@/components/game/GameOverModal";
+import { TutorialOverlay } from "@/components/game/TutorialOverlay";
 import { createSession, getCurrentGame, createGame } from "@/lib/api";
 import { BUILDING_PANEL } from "@/lib/constants";
 import type { BuildingType, Direction } from "@/lib/types";
@@ -181,6 +182,7 @@ export default function GamePage() {
         <MetricsPanel />
       </div>
       <GameOverModal />
+      <TutorialOverlay />
     </div>
   );
 }

@@ -41,15 +41,15 @@ export function MetricsPanel() {
     >
       {/* THROUGHPUT */}
       <section>
-        <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
+        <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
           THROUGHPUT
         </div>
         {sortedMachines.length === 0 && (
-          <div style={{ color: "#374151", fontSize: 12 }}>No machines placed</div>
+          <div style={{ color: "#374151", fontSize: 14 }}>No machines placed</div>
         )}
         {sortedMachines.map((m) => (
           <div key={m.pos.join(",")} style={{ marginBottom: 6 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 16 }}>
               <span style={{ color: m.is_bottleneck ? "#f59e0b" : "#7dd3fc" }}>
                 {m.pos[0]},{m.pos[1]}
                 {m.is_bottleneck ? " ⚠" : ""}
@@ -72,7 +72,7 @@ export function MetricsPanel() {
 
       {/* WAVES */}
       <section>
-        <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
+        <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
           WAVES
         </div>
         <div style={{ fontSize: 16, color: "#e0e0e0" }}>
@@ -80,8 +80,8 @@ export function MetricsPanel() {
         </div>
         {waveActive ? (
           <>
-            <div style={{ fontSize: 14, color: "#f59e0b" }}>{waveAttackerCount} attackers</div>
-            <div style={{ fontSize: 12, color: "#6b7280", marginTop: 4 }}>
+            <div style={{ fontSize: 16, color: "#f59e0b" }}>{waveAttackerCount} attackers</div>
+            <div style={{ fontSize: 14, color: "#6b7280", marginTop: 4 }}>
               {waveAttackTypes.map((t) => (
                 <div key={t} style={{ display: "flex", alignItems: "center", gap: 4 }}>
                   <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#f43f5e", display: "inline-block" }} />
@@ -91,7 +91,7 @@ export function MetricsPanel() {
             </div>
           </>
         ) : (
-          <div style={{ fontSize: 14, color: "#34d399" }}>
+          <div style={{ fontSize: 16, color: "#34d399" }}>
             {waveNumber === 0 ? "Awaiting traffic..." : "CLEAR"}
           </div>
         )}
@@ -99,11 +99,11 @@ export function MetricsPanel() {
 
       {/* DEFENSES */}
       <section>
-        <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
+        <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
           DEFENSES
         </div>
         {defenses.length === 0 && (
-          <div style={{ color: "#374151", fontSize: 12 }}>No defenses placed</div>
+          <div style={{ color: "#374151", fontSize: 14 }}>No defenses placed</div>
         )}
         {defenses.map(({ key, type, active }) => (
           <div key={key} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
@@ -117,7 +117,7 @@ export function MetricsPanel() {
             <span style={{ fontSize: 14, color: "#e0e0e0" }}>
               {type.replace(/_/g, " ")}
             </span>
-            <span style={{ fontSize: 12, color: "#6b7280", marginLeft: "auto" }}>
+            <span style={{ fontSize: 14, color: "#6b7280", marginLeft: "auto" }}>
               {key}
             </span>
           </div>
@@ -126,14 +126,14 @@ export function MetricsPanel() {
 
       {/* EVENT LOG */}
       <section style={{ marginTop: "auto" }}>
-        <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
+        <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
           LOG
         </div>
         {events.length === 0 && (
-          <div style={{ color: "#374151", fontSize: 12 }}>No events yet</div>
+          <div style={{ color: "#374151", fontSize: 14 }}>No events yet</div>
         )}
         {events.map((ev, i) => (
-          <div key={i} style={{ marginBottom: 4, fontSize: 12 }}>
+          <div key={i} style={{ marginBottom: 4, fontSize: 14 }}>
             <span style={{ color: "#374151" }}>{ev.timestamp} </span>
             <span style={{ color: eventColor(ev.eventType) }}>{ev.message}</span>
           </div>

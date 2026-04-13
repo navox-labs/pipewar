@@ -26,7 +26,7 @@ export function BuildPanel() {
     >
       <div
         style={{
-          fontSize: 11,
+          fontSize: 14,
           color: "#6b7280",
           textTransform: "uppercase",
           letterSpacing: "0.1em",
@@ -38,7 +38,7 @@ export function BuildPanel() {
       </div>
 
       {/* Production section */}
-      <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase" }}>
+      <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase" }}>
         PRODUCTION
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
@@ -57,7 +57,7 @@ export function BuildPanel() {
       </div>
 
       {/* Defense section */}
-      <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", marginTop: 8 }}>
+      <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", marginTop: 8 }}>
         DEFENSE
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
@@ -79,7 +79,7 @@ export function BuildPanel() {
       <div
         style={{
           marginTop: "auto",
-          fontSize: 11,
+          fontSize: 12,
           color: "#6b7280",
           borderTop: "1px solid #0a3d7a",
           paddingTop: 8,
@@ -104,7 +104,7 @@ export function BuildPanel() {
       {/* Keyboard shortcuts */}
       <div
         style={{
-          fontSize: 10,
+          fontSize: 14,
           color: "#374151",
           borderTop: "1px solid #0a3d7a",
           paddingTop: 8,
@@ -165,8 +165,8 @@ function BuildingCard({
         {glyph}
       </span>
       <div>
-        <div style={{ fontSize: 10, color: "#6b7280" }}>[{shortcut}]</div>
-        <div style={{ fontSize: 11, color: "#e0e0e0" }}>{name}</div>
+        <div style={{ fontSize: 14, color: "#6b7280" }}>[{shortcut}]</div>
+        <div style={{ fontSize: 16, color: "#e0e0e0" }}>{name}</div>
       </div>
     </button>
   );
