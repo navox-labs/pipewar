@@ -4,7 +4,7 @@ FROM python:3.12-slim AS builder
 WORKDIR /build
 
 # Install dependencies into an isolated prefix so we can copy only what's needed
-COPY backend/requirements.txt ./requirements.txt
+COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # ---- production stage ----
@@ -20,7 +20,7 @@ COPY --from=builder /install /usr/local
 WORKDIR /app
 
 # Copy only application source — no tests, no __pycache__, no .env
-COPY backend/ ./backend/
+COPY . ./backend/
 
 # Persistent volume mount point for SQLite database
 RUN mkdir -p /data && chown pipewar:pipewar /data
