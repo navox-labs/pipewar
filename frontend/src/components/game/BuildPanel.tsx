@@ -12,13 +12,13 @@ export function BuildPanel() {
   return (
     <div
       style={{
-        width: 220,
+        width: 190,
         background: "#001a3d",
         borderRight: "1px solid #0a3d7a",
-        padding: 16,
+        padding: 10,
         display: "flex",
         flexDirection: "column",
-        gap: 12,
+        gap: 8,
         flexShrink: 0,
         overflowX: "hidden",
         overflowY: "auto",
@@ -27,22 +27,22 @@ export function BuildPanel() {
     >
       <div
         style={{
-          fontSize: 14,
+          fontSize: 10,
           color: "#6b7280",
           textTransform: "uppercase",
           letterSpacing: "0.1em",
           borderBottom: "1px solid #0a3d7a",
-          paddingBottom: 8,
+          paddingBottom: 4,
         }}
       >
         BUILD
       </div>
 
       {/* Production section */}
-      <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase" }}>
+      <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase" }}>
         PRODUCTION
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 4 }}>
         {production.map((b) => (
           <BuildingCard
             key={b.type}
@@ -58,10 +58,10 @@ export function BuildPanel() {
       </div>
 
       {/* Defense section */}
-      <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", marginTop: 8 }}>
+      <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase", marginTop: 4 }}>
         DEFENSE
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 4 }}>
         {defense.map((b) => (
           <BuildingCard
             key={b.type}
@@ -80,39 +80,34 @@ export function BuildPanel() {
       <div
         style={{
           marginTop: "auto",
-          fontSize: 12,
+          fontSize: 10,
           color: "#6b7280",
           borderTop: "1px solid #0a3d7a",
-          paddingTop: 8,
-          lineHeight: 1.6,
+          paddingTop: 6,
+          lineHeight: 1.5,
         }}
       >
-        <div style={{ color: "#6b7280", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.1em" }}>
+        <div style={{ color: "#6b7280", marginBottom: 2, textTransform: "uppercase", letterSpacing: "0.1em", fontSize: 9 }}>
           CHAIN
         </div>
-        <div>Iron Ore &rarr; Smelter</div>
-        <div>&rarr; Iron Plate</div>
-        <div>Copper Ore &rarr; Smelter</div>
-        <div>&rarr; Copper Plate</div>
-        <div>Copper Plate &rarr; Assembler</div>
-        <div>&rarr; Copper Wire (x2)</div>
-        <div>Iron Plate + Wire(x3)</div>
-        <div>&rarr; Green Circuit</div>
-        <div>Green Circuit (x2)</div>
-        <div style={{ color: "#34d399" }}>&rarr; ADVANCED CIRCUIT</div>
+        <div>Iron Ore &rarr; Smelter &rarr; Iron Plate</div>
+        <div>Copper Ore &rarr; Smelter &rarr; Copper Plate</div>
+        <div>Copper Plate &rarr; Assembler &rarr; Wire</div>
+        <div>Iron Plate + Wire &rarr; Green Circuit</div>
+        <div style={{ color: "#34d399" }}>Green Circuit &rarr; ADVANCED</div>
       </div>
 
       {/* Keyboard shortcuts */}
       <div
         style={{
-          fontSize: 14,
+          fontSize: 9,
           color: "#374151",
           borderTop: "1px solid #0a3d7a",
-          paddingTop: 8,
-          lineHeight: 1.7,
+          paddingTop: 6,
+          lineHeight: 1.6,
         }}
       >
-        <div>1-4: production | 5-8: defense</div>
+        <div>1-4: prod | 5-8: defense</div>
         <div>R: rotate | Esc: deselect</div>
         <div>Space: pause | Del: remove</div>
       </div>
@@ -124,7 +119,6 @@ function BuildingCard({
   shortcut,
   glyph,
   name,
-  type,
   selected,
   category,
   onClick,
@@ -144,16 +138,17 @@ function BuildingCard({
     <button
       onClick={onClick}
       style={{
-        height: 48,
+        height: 40,
         background: selected ? "rgba(10,31,61,0.8)" : "transparent",
         border: selected ? `1px solid ${borderColor}` : "1px solid transparent",
         cursor: "pointer",
         display: "flex",
         alignItems: "center",
-        gap: 6,
-        padding: "0 8px",
+        gap: 4,
+        padding: "0 4px",
         fontFamily: "'JetBrains Mono', monospace",
         transition: "none",
+        minWidth: 0,
       }}
       onMouseEnter={(e) => {
         if (!selected) (e.currentTarget as HTMLButtonElement).style.background = "#0a1f3d";
@@ -162,12 +157,12 @@ function BuildingCard({
         if (!selected) (e.currentTarget as HTMLButtonElement).style.background = "transparent";
       }}
     >
-      <span style={{ fontSize: 18, color: glyphColor, width: 24, textAlign: "center" }}>
+      <span style={{ fontSize: 14, color: glyphColor, width: 18, textAlign: "center", flexShrink: 0 }}>
         {glyph}
       </span>
-      <div>
-        <div style={{ fontSize: 14, color: "#6b7280" }}>[{shortcut}]</div>
-        <div style={{ fontSize: 16, color: "#e0e0e0" }}>{name}</div>
+      <div style={{ minWidth: 0, overflow: "hidden" }}>
+        <div style={{ fontSize: 9, color: "#6b7280" }}>[{shortcut}]</div>
+        <div style={{ fontSize: 11, color: "#e0e0e0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{name}</div>
       </div>
     </button>
   );

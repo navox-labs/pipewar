@@ -53,7 +53,7 @@ export function GameOverModal() {
       >
         <div
           style={{
-            fontSize: 36,
+            fontSize: 24,
             fontWeight: 700,
             color: won ? "#34d399" : "#f43f5e",
             marginBottom: 8,
@@ -61,7 +61,7 @@ export function GameOverModal() {
         >
           {won ? "SYSTEM SECURED" : "SYSTEM COMPROMISED"}
         </div>
-        <div style={{ fontSize: 16, color: "#e0e0e0", marginBottom: 24 }}>
+        <div style={{ fontSize: 12, color: "#e0e0e0", marginBottom: 24 }}>
           {won
             ? "20 Advanced Circuits produced"
             : "Uptime dropped below 95%"}
@@ -80,7 +80,7 @@ export function GameOverModal() {
                 display: "flex",
                 justifyContent: "space-between",
                 marginBottom: 8,
-                fontSize: 18,
+                fontSize: 13,
               }}
             >
               <span style={{ color: "#6b7280" }}>{label}</span>

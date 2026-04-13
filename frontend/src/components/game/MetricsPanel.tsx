@@ -27,13 +27,13 @@ export function MetricsPanel() {
   return (
     <div
       style={{
-        width: 240,
+        width: 200,
         background: "#001a3d",
         borderLeft: "1px solid #0a3d7a",
-        padding: 16,
+        padding: 10,
         display: "flex",
         flexDirection: "column",
-        gap: 16,
+        gap: 10,
         flexShrink: 0,
         overflowY: "auto",
         fontFamily: "'JetBrains Mono', monospace",
@@ -41,25 +41,25 @@ export function MetricsPanel() {
     >
       {/* THROUGHPUT */}
       <section>
-        <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
+        <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 3, marginBottom: 6 }}>
           THROUGHPUT
         </div>
         {sortedMachines.length === 0 && (
-          <div style={{ color: "#374151", fontSize: 14 }}>No machines placed</div>
+          <div style={{ color: "#374151", fontSize: 11 }}>No machines placed</div>
         )}
         {sortedMachines.map((m) => (
-          <div key={m.pos.join(",")} style={{ marginBottom: 6 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 16 }}>
+          <div key={m.pos.join(",")} style={{ marginBottom: 4 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
               <span style={{ color: m.is_bottleneck ? "#f59e0b" : "#7dd3fc" }}>
                 {m.pos[0]},{m.pos[1]}
                 {m.is_bottleneck ? " ⚠" : ""}
               </span>
               <span style={{ color: "#e0e0e0" }}>{m.items_per_min.toFixed(0)}/min</span>
             </div>
-            <div style={{ height: 4, background: "#0a3d7a", marginTop: 2 }}>
+            <div style={{ height: 3, background: "#0a3d7a", marginTop: 2 }}>
               <div
                 style={{
-                  height: 4,
+                  height: 3,
                   width: `${(m.items_per_min / maxRate) * 100}%`,
                   background: m.is_bottleneck ? "#f59e0b" : "#38bdf8",
                   transition: "none",
@@ -72,26 +72,26 @@ export function MetricsPanel() {
 
       {/* WAVES */}
       <section>
-        <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
+        <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 3, marginBottom: 6 }}>
           WAVES
         </div>
-        <div style={{ fontSize: 16, color: "#e0e0e0" }}>
+        <div style={{ fontSize: 12, color: "#e0e0e0" }}>
           Wave {waveNumber || "—"}
         </div>
         {waveActive ? (
           <>
-            <div style={{ fontSize: 16, color: "#f59e0b" }}>{waveAttackerCount} attackers</div>
-            <div style={{ fontSize: 14, color: "#6b7280", marginTop: 4 }}>
+            <div style={{ fontSize: 11, color: "#f59e0b" }}>{waveAttackerCount} attackers</div>
+            <div style={{ fontSize: 10, color: "#6b7280", marginTop: 2 }}>
               {waveAttackTypes.map((t) => (
                 <div key={t} style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#f43f5e", display: "inline-block" }} />
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#f43f5e", display: "inline-block" }} />
                   {t.replace(/_/g, " ")}
                 </div>
               ))}
             </div>
           </>
         ) : (
-          <div style={{ fontSize: 16, color: "#34d399" }}>
+          <div style={{ fontSize: 11, color: "#34d399" }}>
             {waveNumber === 0 ? "Awaiting traffic..." : "CLEAR"}
           </div>
         )}
@@ -99,25 +99,25 @@ export function MetricsPanel() {
 
       {/* DEFENSES */}
       <section>
-        <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
+        <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 3, marginBottom: 6 }}>
           DEFENSES
         </div>
         {defenses.length === 0 && (
-          <div style={{ color: "#374151", fontSize: 14 }}>No defenses placed</div>
+          <div style={{ color: "#374151", fontSize: 11 }}>No defenses placed</div>
         )}
         {defenses.map(({ key, type, active }) => (
-          <div key={key} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+          <div key={key} style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 3 }}>
             <span
               style={{
-                width: 8, height: 8, borderRadius: "50%",
+                width: 6, height: 6, borderRadius: "50%",
                 background: active ? "#34d399" : "#2a1a1a",
                 flexShrink: 0,
               }}
             />
-            <span style={{ fontSize: 14, color: "#e0e0e0" }}>
+            <span style={{ fontSize: 11, color: "#e0e0e0" }}>
               {type.replace(/_/g, " ")}
             </span>
-            <span style={{ fontSize: 14, color: "#6b7280", marginLeft: "auto" }}>
+            <span style={{ fontSize: 10, color: "#6b7280", marginLeft: "auto" }}>
               {key}
             </span>
           </div>
@@ -126,14 +126,14 @@ export function MetricsPanel() {
 
       {/* EVENT LOG */}
       <section style={{ marginTop: "auto" }}>
-        <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 4, marginBottom: 8 }}>
+        <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 3, marginBottom: 6 }}>
           LOG
         </div>
         {events.length === 0 && (
-          <div style={{ color: "#374151", fontSize: 14 }}>No events yet</div>
+          <div style={{ color: "#374151", fontSize: 11 }}>No events yet</div>
         )}
         {events.map((ev, i) => (
-          <div key={i} style={{ marginBottom: 4, fontSize: 14 }}>
+          <div key={i} style={{ marginBottom: 3, fontSize: 10 }}>
             <span style={{ color: "#374151" }}>{ev.timestamp} </span>
             <span style={{ color: eventColor(ev.eventType) }}>{ev.message}</span>
           </div>
