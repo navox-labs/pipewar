@@ -2,6 +2,15 @@
 
 Build a Factorio-style production pipeline in your browser and defend it against automated hacker attack waves.
 
+**[Play Now](https://frontend-three-cyan-85.vercel.app)**
+
+---
+
+## Live URLs
+
+- **Frontend**: https://frontend-three-cyan-85.vercel.app
+- **Backend**: https://pipewar-backend-588857514802.us-central1.run.app
+
 ---
 
 ## How It Works
