@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme inline {
+  --color-pw-bg: #00214d;
+  --color-pw-grid-bg: #001433;
+  --color-pw-panel-bg: #001a3d;
+  --color-pw-panel-border: #0a3d7a;
+  --color-pw-machine: #38bdf8;
+  --color-pw-machine-text: #7dd3fc;
+  --color-pw-circuit: #34d399;
+  --color-pw-iron-ore: #854d0e;
+  --color-pw-copper-ore: #b45309;
+  --color-pw-ore-bg: #0f0a02;
+  --color-pw-belt: #1e4080;
+  --color-pw-attacker: #f43f5e;
+  --color-pw-trail: #7f1d1d;
+  --color-pw-defense: #1d4ed8;
+  --color-pw-defense-text: #60a5fa;
+  --color-pw-active: #34d399;
+  --color-pw-offline: #2a1a1a;
+  --color-pw-warning: #f59e0b;
+  --color-pw-critical: #f43f5e;
+  --color-pw-uptime: #e0e0e0;
+  --color-pw-uptime-accent: #34d399;
+  --color-pw-text: #e0e0e0;
+  --color-pw-text-dim: #6b7280;
+  --color-pw-text-muted: #374151;
+  --color-pw-event-attack: #f43f5e;
+  --color-pw-event-warning: #f87171;
+  --color-pw-event-success: #34d399;
+  --color-pw-event-info: #0a3d7a;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0; height: 100%;
+  background-color: #00214d; color: #e0e0e0;
+  font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px;
+}
