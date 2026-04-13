@@ -1,0 +1,61 @@
+# fly.toml — PIPEWAR backend deployment config
+# Deploy with: fly deploy (from repo root, pointing at backend/)
+# Secrets set via: fly secrets set FRONTEND_ORIGIN=https://your-vercel-url.vercel.app
+
+app = "pipewar-backend"
+primary_region = "ord"      # Chicago — change to nearest region
+kill_signal = "SIGTERM"
+kill_timeout = "30s"        # give the engine time to save all active games
+
+[build]
+  dockerfile = "backend/Dockerfile"
+  # Dockerfile WORKDIR is /app (parent of backend/), so context must be repo root.
+  # Run `fly deploy` from the repo root, not from backend/.
+
+[env]
+  ENV = "production"
+  PORT = "8080"
+  HOST = "0.0.0.0"
+  # DB_PATH is set by the volume mount below — do not override here.
+  # FRONTEND_ORIGIN must be set via: fly secrets set FRONTEND_ORIGIN=<url>
+
+[[mounts]]
+  source = "pipewar_data"
+  destination = "/data"
+  # Create the volume before first deploy:
+  # fly volumes create pipewar_data --region ord --size 1
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8080
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 1    # keep one machine warm — WebSocket state is in-memory
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 300          # MAX_ACTIVE_GAMES=200, WS_GLOBAL_CAP=250, plus headroom
+    soft_limit = 250
+
+  [[services.http_checks]]
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "15s"
+    method = "GET"
+    path = "/health"
+    protocol = "http"
+    tls_skip_verify = false
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+  # Upgrade to dedicated-cpu-1x if tick loop latency becomes an issue

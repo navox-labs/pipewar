@@ -1,0 +1,39 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Tests — not needed in the image
+tests/
+
+# Local environment and secrets — never bake into image
+.env
+.env.*
+*.env
+
+# Database files — mounted as a volume at runtime
+*.db
+*.db-shm
+*.db-wal
+
+# Version control
+.git/
+.gitignore
+
+# Editor / OS artifacts
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# CI / coverage artifacts
+.coverage
+htmlcov/
+.pytest_cache/
