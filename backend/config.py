@@ -21,6 +21,7 @@ DB_PATH = os.environ.get("DB_PATH", "pipewar.db")
 # ---------------------------------------------------------------------------
 COOKIE_NAME = "pipewar_session"
 SESSION_TTL_DAYS = 7
+IS_PRODUCTION = os.environ.get("ENV", "dev") != "dev"
 
 # ---------------------------------------------------------------------------
 # Game engine

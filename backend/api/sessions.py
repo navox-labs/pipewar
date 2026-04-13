@@ -9,7 +9,7 @@ from backend.db.queries.sessions import (
     create_session, get_session, touch_session, has_active_game,
 )
 from backend.models.schemas import SessionResponse, SessionMeResponse
-from backend.config import COOKIE_NAME, SESSION_TTL_DAYS
+from backend.config import COOKIE_NAME, SESSION_TTL_DAYS, IS_PRODUCTION
 
 log = logging.getLogger(__name__)
 router = APIRouter()
@@ -69,7 +69,7 @@ async def create_session_endpoint(
         key=COOKIE_NAME,
         value=session_id,
         httponly=True,
-        secure=False,       # set True in production behind HTTPS
+        secure=IS_PRODUCTION,
         samesite="lax",
         max_age=SESSION_TTL_DAYS * 86400,
         path="/",
