@@ -20,13 +20,12 @@ app = FastAPI(title="PIPEWAR", version="1.0.0")
 # ---------------------------------------------------------------------------
 # C-06: CORS -- exact frontend origin only, never wildcard
 # ---------------------------------------------------------------------------
-_allowed_origins = [FRONTEND_ORIGIN]
-# Add localhost variants for dev
-if os.environ.get("ENV", "dev") == "dev":
-    _allowed_origins += [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ]
+_allowed_origins = [
+    FRONTEND_ORIGIN,
+    "https://frontend-three-cyan-85.vercel.app",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 
 app.add_middleware(
     CORSMiddleware,
