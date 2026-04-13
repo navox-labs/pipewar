@@ -20,6 +20,7 @@ export function BuildPanel() {
         flexDirection: "column",
         gap: 12,
         flexShrink: 0,
+        overflowX: "hidden",
         overflowY: "auto",
         fontFamily: "'JetBrains Mono', monospace",
       }}
@@ -41,7 +42,7 @@ export function BuildPanel() {
       <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase" }}>
         PRODUCTION
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8 }}>
         {production.map((b) => (
           <BuildingCard
             key={b.type}
@@ -60,7 +61,7 @@ export function BuildPanel() {
       <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", marginTop: 8 }}>
         DEFENSE
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8 }}>
         {defense.map((b) => (
           <BuildingCard
             key={b.type}

@@ -44,7 +44,7 @@ export function HUD({ onPause }: Props) {
 
       {/* Center: uptime */}
       <div style={{ textAlign: "center" }}>
-        <div style={{ fontSize: 48, fontWeight: 700, color: uptimeColor(uptimePct), lineHeight: 1 }}>
+        <div style={{ fontSize: 24, fontWeight: 700, color: uptimeColor(uptimePct), lineHeight: 1.2 }}>
           {uptimePct.toFixed(2)}%
         </div>
         <div style={{ fontSize: 14, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em" }}>
