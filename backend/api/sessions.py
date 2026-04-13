@@ -69,8 +69,8 @@ async def create_session_endpoint(
         key=COOKIE_NAME,
         value=session_id,
         httponly=True,
-        secure=IS_PRODUCTION,
-        samesite="lax",
+        secure=True,
+        samesite="none",
         max_age=SESSION_TTL_DAYS * 86400,
         path="/",
     )
