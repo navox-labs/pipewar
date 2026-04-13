@@ -23,6 +23,7 @@ app = FastAPI(title="PIPEWAR", version="1.0.0")
 _allowed_origins = [
     FRONTEND_ORIGIN,
     "https://frontend-three-cyan-85.vercel.app",
+    "https://frontend-beta-five-83.vercel.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
