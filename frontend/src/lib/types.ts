@@ -168,6 +168,7 @@ export interface BuildingPlacedMsg {
   x: number;
   y: number;
   building_type: BuildingType;
+  direction: Direction;
 }
 
 export interface BuildingRemovedMsg {

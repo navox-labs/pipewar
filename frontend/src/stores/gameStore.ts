@@ -178,7 +178,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const isDefense = ["rate_limiter", "waf", "auth_middleware", "circuit_breaker"].includes(msg.building_type);
       const buildingData = {
         type: msg.building_type,
-        direction: s.selectedDirection,
+        direction: msg.direction,
         health: 100,
       };
       if (isDefense) {

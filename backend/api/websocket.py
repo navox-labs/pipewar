@@ -231,6 +231,7 @@ async def _handle_message(engine: GameEngine, ws: WebSocket, msg):
                 "x": msg.x,
                 "y": msg.y,
                 "building_type": BuildingType(msg.building_type).value,
+                "direction": Direction(msg.direction).value,
             }))
 
     elif msg_type == "remove_building":

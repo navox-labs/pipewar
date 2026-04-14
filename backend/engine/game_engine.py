@@ -222,8 +222,8 @@ class GameEngine:
         if check_circuit_breaker_activation(self.grid):
             self._circuit_breaker_active_ticks = CIRCUIT_BREAKER_DURATION
         if self._circuit_breaker_active_ticks > 0:
-            self._circuit_breaker_active_ticks -= 1
             damage_this_tick = 0
+            self._circuit_breaker_active_ticks -= 1
         else:
             damage_this_tick = self._tick_attackers()
         self._tick_uptime()
