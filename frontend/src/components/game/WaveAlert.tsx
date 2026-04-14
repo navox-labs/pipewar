@@ -2,8 +2,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useGameStore } from "@/stores/gameStore";
 
-const FONT = "Menlo, Monaco, 'Courier New', monospace";
-
 export function WaveAlert() {
   const { waveActive, waveNumber, waveAttackTypes } = useGameStore();
   const [visible, setVisible] = useState(false);
@@ -31,37 +29,17 @@ export function WaveAlert() {
 
   return (
     <div
+      className="absolute top-12 left-40 right-[200px] px-4 py-1.5 bg-[rgba(11,22,34,0.92)] border-b border-pw-attacker flex items-center justify-center gap-3 z-[100] font-mono"
       style={{
-        position: "absolute",
-        top: 48,
-        left: 160,   // clear the build panel
-        right: 200,  // clear the metrics panel
-        padding: "6px 16px",
-        background: "rgba(11, 22, 34, 0.92)",
-        borderBottom: "1px solid #ff4757",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 12,
-        zIndex: 100,
         opacity: fading ? 0 : 1,
         transition: fading ? "opacity 0.5s" : "none",
-        fontFamily: FONT,
       }}
     >
-      <span
-        style={{
-          display: "inline-block",
-          width: 6,
-          height: 6,
-          borderRadius: "50%",
-          background: "#ff4757",
-        }}
-      />
-      <span style={{ fontSize: 12, fontWeight: "bold", color: "#ff4757", letterSpacing: "0.5px" }}>
+      <span className="inline-block w-1.5 h-1.5 rounded-full bg-pw-attacker" />
+      <span className="text-xs font-bold text-pw-attacker tracking-[0.5px]">
         WAVE {waveNumber} INCOMING
       </span>
-      <span style={{ fontSize: 11, color: "#a0b0c0" }}>
+      <span className="text-[11px] text-pw-text-dim">
         {waveAttackTypes.map((t) => t.replace(/_/g, " ")).join(", ")}
       </span>
     </div>

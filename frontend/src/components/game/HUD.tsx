@@ -1,8 +1,6 @@
 "use client";
 import { useGameStore } from "@/stores/gameStore";
 
-const FONT = "Menlo, Monaco, 'Courier New', monospace";
-
 interface Props {
   onPause: () => void;
 }
@@ -21,77 +19,56 @@ export function HUD({ onPause }: Props) {
   } = useGameStore();
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "8px 16px",
-        background: "#00214d",
-        borderBottom: "1px solid #0a3d7a",
-        flexShrink: 0,
-        fontFamily: FONT,
-      }}
-    >
+    <div className="flex justify-between items-center px-4 py-2 bg-pw-bg border-b border-pw-panel-border shrink-0 font-mono">
       {/* Left: production status */}
       <div>
-        <div style={{ fontSize: 10, color: "#a0b0c0", textTransform: "uppercase", letterSpacing: "1px" }}>
+        <div className="text-[10px] text-pw-text-dim uppercase tracking-[1px]">
           Production
         </div>
-        <div style={{ fontSize: 12, color: "#c0c0c0" }}>
-          Traffic: <span style={{ color: "#5af78e" }}>{totalTraffic.toFixed(1)}</span> items/min
+        <div className="text-xs text-[#c0c0c0]">
+          Traffic: <span className="text-pw-accent">{totalTraffic.toFixed(1)}</span> items/min
         </div>
       </div>
 
       {/* Center: uptime (large) */}
-      <div style={{ textAlign: "center" }}>
-        <div style={{ fontSize: 20, fontWeight: "bold", color: uptimeColor(uptimePct), lineHeight: 1.2 }}>
+      <div className="text-center">
+        <div className="text-[20px] font-bold leading-[1.2]" style={{ color: uptimeColor(uptimePct) }}>
           {uptimePct.toFixed(2)}%
         </div>
-        <div style={{ fontSize: 11, color: "#a0b0c0" }}>
+        <div className="text-[11px] text-pw-text-dim">
           UPTIME &middot; {advancedCircuits}/20 CIRCUITS
         </div>
       </div>
 
       {/* Right: wave info */}
-      <div style={{ textAlign: "right" }}>
-        <div style={{ fontSize: 14, fontWeight: "bold", color: "#e0e0e0" }}>
+      <div className="text-right">
+        <div className="text-sm font-bold text-pw-text">
           WAVE {currentWave}
           {waveActive && (
-            <span style={{ fontSize: 11, fontWeight: "normal", color: "#a0b0c0" }}>
+            <span className="text-[11px] font-normal text-pw-text-dim">
               {" "}— {waveAttackerCount} attackers
             </span>
           )}
         </div>
         {waveActive ? (
-          <div style={{ fontSize: 11, color: "#a0b0c0" }}>
+          <div className="text-[11px] text-pw-text-dim">
             {waveAttackTypes.map((t) => t.replace(/_/g, " ")).join(", ")}
           </div>
         ) : (
-          <div style={{ fontSize: 11, color: "#5af78e" }}>
+          <div className="text-[11px] text-pw-accent">
             {currentWave === 0 ? "Build to trigger wave" : "CLEAR"}
           </div>
         )}
       </div>
 
       {/* Connection indicator + pause */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <span style={{ fontSize: 10, color: connected ? "#5af78e" : "#ff4757" }}>
+      <div className="flex items-center gap-3">
+        <span className="text-[10px]" style={{ color: connected ? "#5af78e" : "#ff4757" }}>
           {connected ? "●" : "○"}
         </span>
         <button
           onClick={onPause}
-          style={{
-            display: "inline-block",
-            padding: "2px 10px",
-            border: "1px solid #5af78e",
-            color: "#5af78e",
-            fontSize: 11,
-            borderRadius: 3,
-            background: "transparent",
-            cursor: "pointer",
-            fontFamily: FONT,
-          }}
+          className="inline-block px-[10px] py-[2px] border border-pw-accent text-pw-accent text-[11px] rounded-[3px] bg-transparent cursor-pointer font-mono"
         >
           {paused ? "RESUME" : "PAUSE"}
         </button>

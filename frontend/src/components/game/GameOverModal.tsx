@@ -3,8 +3,6 @@ import { useGameStore } from "@/stores/gameStore";
 import { useRouter } from "next/navigation";
 import { deleteCurrentGame, createGame } from "@/lib/api";
 
-const FONT = "Menlo, Monaco, 'Courier New', monospace";
-
 export function GameOverModal() {
   const { gameOverResult, resetGame, setGameId } = useGameStore();
   const router = useRouter();
@@ -34,47 +32,26 @@ export function GameOverModal() {
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.75)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 999,
-        fontFamily: FONT,
-      }}
-    >
+    <div className="fixed inset-0 bg-[rgba(0,0,0,0.75)] flex items-center justify-center z-[999] font-mono">
       <div
-        style={{
-          width: 440,
-          background: "#001a3d",
-          border: `2px solid ${accentColor}`,
-          padding: 32,
-          borderRadius: 4,
-        }}
+        className="w-[440px] bg-pw-panel-bg p-8 rounded-[4px]"
+        style={{ border: `2px solid ${accentColor}` }}
       >
         {/* Title */}
         <div
-          style={{
-            fontSize: 24,
-            fontWeight: "bold",
-            color: accentColor,
-            marginBottom: 6,
-            letterSpacing: "0.05em",
-          }}
+          className="text-2xl font-bold mb-1.5 tracking-[0.05em]"
+          style={{ color: accentColor }}
         >
           {won ? "SYSTEM SECURED" : "SYSTEM COMPROMISED"}
         </div>
-        <div style={{ fontSize: 11, color: "#a0b0c0", marginBottom: 24 }}>
+        <div className="text-[11px] text-pw-text-dim mb-6">
           {won
             ? "20 Advanced Circuits produced"
             : "Uptime dropped below 95%"}
         </div>
 
         {/* Stats */}
-        <div style={{ borderTop: "1px solid #0a3d7a", paddingTop: 16, marginBottom: 24 }}>
+        <div className="border-t border-pw-panel-border pt-4 mb-6">
           {[
             ["Uptime", `${final_uptime.toFixed(2)}%`],
             ["Circuits", `${advanced_circuits} / 20`],
@@ -82,15 +59,10 @@ export function GameOverModal() {
           ].map(([label, value]) => (
             <div
               key={label}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: 8,
-                fontSize: 12,
-              }}
+              className="flex justify-between mb-2 text-xs"
             >
-              <span style={{ color: "#a0b0c0" }}>{label}</span>
-              <span style={{ color: "#e0e0e0" }}>{value}</span>
+              <span className="text-pw-text-dim">{label}</span>
+              <span className="text-pw-text">{value}</span>
             </div>
           ))}
         </div>
@@ -98,20 +70,8 @@ export function GameOverModal() {
         {/* Play Again */}
         <button
           onClick={handlePlayAgain}
-          style={{
-            width: "100%",
-            height: 44,
-            background: "transparent",
-            border: `1px solid ${accentColor}`,
-            color: accentColor,
-            fontSize: 13,
-            fontWeight: "bold",
-            cursor: "pointer",
-            fontFamily: FONT,
-            marginBottom: 10,
-            letterSpacing: "0.05em",
-            borderRadius: 3,
-          }}
+          className="w-full h-11 bg-transparent text-[13px] font-bold cursor-pointer font-mono mb-2.5 tracking-[0.05em] rounded-[3px]"
+          style={{ border: `1px solid ${accentColor}`, color: accentColor }}
           onMouseEnter={(e) => {
             const btn = e.currentTarget as HTMLButtonElement;
             btn.style.background = accentColor;
@@ -127,17 +87,10 @@ export function GameOverModal() {
         </button>
 
         {/* Quit */}
-        <div style={{ textAlign: "center" }}>
+        <div className="text-center">
           <button
             onClick={handleQuit}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "#7090b0",
-              fontSize: 11,
-              cursor: "pointer",
-              fontFamily: FONT,
-            }}
+            className="bg-transparent border-none text-pw-text-faint text-[11px] cursor-pointer font-mono"
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLButtonElement).style.color = "#888";
             }}

@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 
-const FONT = "Menlo, Monaco, 'Courier New', monospace";
 const STORAGE_KEY = "pipewar_tutorial_complete";
 
 interface TutorialStep {
@@ -47,12 +46,8 @@ function Arrow({ direction }: { direction: "left" | "right" | "down" | "up" }) {
   };
   return (
     <span
-      style={{
-        fontSize: 24,
-        color: "#5af78e",
-        display: "inline-block",
-        animation: "pulse-arrow 1s ease-in-out infinite",
-      }}
+      className="text-2xl text-pw-accent inline-block"
+      style={{ animation: "pulse-arrow 1s ease-in-out infinite" }}
     >
       {arrows[direction]}
     </span>
@@ -65,13 +60,13 @@ function StepAnnotation({ highlight }: { highlight: TutorialStep["highlight"] })
     border: `2px solid ${borderColor}`,
     color,
     fontSize: 12,
-    fontFamily: FONT,
+    fontFamily: "Menlo, Monaco, 'Courier New', monospace",
     animation: "pulse-border 1.2s ease-in-out infinite",
   });
 
   if (highlight === "ore") {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
+      <div className="flex items-center gap-3 mt-3.5">
         <Arrow direction="right" />
         <div style={annotationStyle("#c87533", "#c87533")}>
           ░ Ore Deposits — scattered on the grid
@@ -81,7 +76,7 @@ function StepAnnotation({ highlight }: { highlight: TutorialStep["highlight"] })
   }
   if (highlight === "adjacent") {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
+      <div className="flex items-center gap-3 mt-3.5">
         <Arrow direction="right" />
         <div style={annotationStyle("#57c7ff", "#57c7ff")}>
           [M] → [S] &nbsp; Miner adjacent to Smelter
@@ -91,7 +86,7 @@ function StepAnnotation({ highlight }: { highlight: TutorialStep["highlight"] })
   }
   if (highlight === "belt") {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
+      <div className="flex items-center gap-3 mt-3.5">
         <Arrow direction="right" />
         <div style={annotationStyle("#4a5568", "#888")}>
           [M] ──→ [S] &nbsp; Belt connects them
@@ -101,7 +96,7 @@ function StepAnnotation({ highlight }: { highlight: TutorialStep["highlight"] })
   }
   if (highlight === "defense") {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
+      <div className="flex items-center gap-3 mt-3.5">
         <Arrow direction="right" />
         <div style={annotationStyle("#5af78e", "#5af78e")}>
           [T] [W] [@] [◆] &nbsp; Right side of grid
@@ -111,7 +106,7 @@ function StepAnnotation({ highlight }: { highlight: TutorialStep["highlight"] })
   }
   if (highlight === "goal") {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
+      <div className="flex items-center gap-3 mt-3.5">
         <Arrow direction="right" />
         <div style={annotationStyle("#5af78e", "#5af78e")}>
           20 ◆ Advanced Circuits @ 99.9% uptime
@@ -165,71 +160,28 @@ export function TutorialOverlay() {
       `}</style>
 
       {/* Backdrop */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "rgba(0, 8, 20, 0.78)",
-          zIndex: 800,
-          pointerEvents: "none",
-        }}
-      />
+      <div className="fixed inset-0 bg-[rgba(0,8,20,0.78)] z-[800] pointer-events-none" />
 
       {/* Tutorial card */}
-      <div
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          zIndex: 900,
-          width: 500,
-          background: "#001a3d",
-          border: "1px solid #1a2a3a",
-          padding: "28px 32px",
-          fontFamily: FONT,
-          boxShadow: "0 0 40px rgba(90, 247, 142, 0.08)",
-          borderRadius: 4,
-        }}
-      >
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[900] w-[500px] bg-pw-panel-bg border border-[#1a2a3a] px-8 py-7 font-mono shadow-[0_0_40px_rgba(90,247,142,0.08)] rounded-[4px]">
         {/* Step dots */}
-        <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
+        <div className="flex gap-1.5 mb-[18px]">
           {STEPS.map((_, i) => (
             <div
               key={i}
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: "50%",
-                background: i === step ? "#5af78e" : "#0a3d7a",
-                transition: "background 0.2s",
-              }}
+              className="w-[7px] h-[7px] rounded-full transition-[background] duration-200"
+              style={{ background: i === step ? "#5af78e" : "#0a3d7a" }}
             />
           ))}
         </div>
 
         {/* Title */}
-        <div
-          style={{
-            fontSize: 11,
-            color: "#5af78e",
-            textTransform: "uppercase",
-            letterSpacing: "1px",
-            marginBottom: 10,
-          }}
-        >
+        <div className="text-[11px] text-pw-accent uppercase tracking-[1px] mb-2.5">
           {current.title}
         </div>
 
         {/* Body */}
-        <div
-          style={{
-            fontSize: 13,
-            color: "#c0c0c0",
-            lineHeight: 1.65,
-            marginBottom: 6,
-          }}
-        >
+        <div className="text-[13px] text-[#c0c0c0] leading-[1.65] mb-1.5">
           {current.body}
         </div>
 
@@ -237,25 +189,10 @@ export function TutorialOverlay() {
         <StepAnnotation highlight={current.highlight} />
 
         {/* Actions */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: 24,
-          }}
-        >
+        <div className="flex justify-between items-center mt-6">
           <button
             onClick={dismiss}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "#7090b0",
-              fontSize: 11,
-              cursor: "pointer",
-              fontFamily: FONT,
-              padding: 0,
-            }}
+            className="bg-transparent border-none text-pw-text-faint text-[11px] cursor-pointer font-mono p-0"
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLButtonElement).style.color = "#888";
             }}
@@ -268,18 +205,7 @@ export function TutorialOverlay() {
 
           <button
             onClick={next}
-            style={{
-              background: "transparent",
-              border: "1px solid #5af78e",
-              color: "#5af78e",
-              fontSize: 12,
-              fontWeight: "bold",
-              cursor: "pointer",
-              fontFamily: FONT,
-              padding: "8px 24px",
-              borderRadius: 3,
-              letterSpacing: "0.05em",
-            }}
+            className="bg-transparent border border-pw-accent text-pw-accent text-xs font-bold cursor-pointer font-mono px-6 py-2 rounded-[3px] tracking-[0.05em]"
             onMouseEnter={(e) => {
               const btn = e.currentTarget as HTMLButtonElement;
               btn.style.background = "rgba(90,247,142,0.12)";

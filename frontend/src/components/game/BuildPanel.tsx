@@ -3,8 +3,6 @@ import { useGameStore } from "@/stores/gameStore";
 import { BUILDING_PANEL, BUILDING_COLORS } from "@/lib/constants";
 import type { BuildingType } from "@/lib/types";
 
-const FONT = "Menlo, Monaco, 'Courier New', monospace";
-
 export function BuildPanel() {
   const { selectedBuilding, selectBuilding } = useGameStore();
 
@@ -12,30 +10,16 @@ export function BuildPanel() {
   const defense = BUILDING_PANEL.filter((b) => b.category === "defense");
 
   return (
-    <div
-      style={{
-        width: 160,
-        background: "#00214d",
-        borderRight: "1px solid #0a3d7a",
-        padding: 12,
-        display: "flex",
-        flexDirection: "column",
-        flexShrink: 0,
-        overflowX: "hidden",
-        overflowY: "auto",
-        fontFamily: FONT,
-        fontSize: 11,
-      }}
-    >
-      <div style={{ color: "#a0b0c0", fontSize: 10, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6 }}>
+    <div className="w-40 bg-pw-bg border-r border-pw-panel-border p-3 flex flex-col shrink-0 overflow-x-hidden overflow-y-auto font-mono text-[11px]">
+      <div className="text-pw-text-dim text-[10px] uppercase tracking-[1px] mb-1.5">
         Build
       </div>
 
       {/* Production section */}
-      <div style={{ color: "#a0b0c0", fontSize: 10, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6, marginTop: 8 }}>
+      <div className="text-pw-text-dim text-[10px] uppercase tracking-[1px] mb-1.5 mt-2">
         Production
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
+      <div className="grid grid-cols-2 gap-1">
         {production.map((b) => (
           <BuildingTile
             key={b.type}
@@ -50,10 +34,10 @@ export function BuildPanel() {
       </div>
 
       {/* Defense section */}
-      <div style={{ color: "#a0b0c0", fontSize: 10, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6, marginTop: 12 }}>
+      <div className="text-pw-text-dim text-[10px] uppercase tracking-[1px] mb-1.5 mt-3">
         Defense
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
+      <div className="grid grid-cols-2 gap-1">
         {defense.map((b) => (
           <BuildingTile
             key={b.type}
@@ -68,19 +52,19 @@ export function BuildPanel() {
       </div>
 
       {/* Production chain legend */}
-      <div style={{ marginTop: 16, fontSize: 10, lineHeight: 1.6 }}>
-        <div style={{ color: "#a0b0c0", fontSize: 10, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 4 }}>
+      <div className="mt-4 text-[10px] leading-[1.6]">
+        <div className="text-pw-text-dim text-[10px] uppercase tracking-[1px] mb-1">
           Chain
         </div>
-        <div style={{ color: "#8aa0b8" }}>Iron Ore → Smelter → Iron Plate</div>
-        <div style={{ color: "#8aa0b8" }}>Copper Ore → Smelter → Copper Plate</div>
-        <div style={{ color: "#8aa0b8" }}>Copper Plate → Assembler → Wire</div>
-        <div style={{ color: "#8aa0b8" }}>Iron Plate + Wire → Green Circuit</div>
-        <div style={{ color: "#5af78e", fontWeight: "bold" }}>Green Circuit → ADVANCED</div>
+        <div className="text-pw-chain">Iron Ore → Smelter → Iron Plate</div>
+        <div className="text-pw-chain">Copper Ore → Smelter → Copper Plate</div>
+        <div className="text-pw-chain">Copper Plate → Assembler → Wire</div>
+        <div className="text-pw-chain">Iron Plate + Wire → Green Circuit</div>
+        <div className="text-pw-accent font-bold">Green Circuit → ADVANCED</div>
       </div>
 
       {/* Keyboard shortcuts */}
-      <div style={{ marginTop: 12, fontSize: 9, color: "#7090b0", lineHeight: 1.5 }}>
+      <div className="mt-3 text-[9px] text-pw-text-faint leading-[1.5]">
         1-4: prod | 5-8: defense<br />
         R: rotate | Esc: deselect<br />
         Space: pause | Del: remove
@@ -109,17 +93,10 @@ function BuildingTile({
   return (
     <button
       onClick={onClick}
+      className="px-1 py-1.5 text-center rounded-[3px] text-[10px] text-[#aaa] cursor-pointer font-mono transition-[border-color] duration-100"
       style={{
         background: selected ? "#0a1f3d" : "#001433",
-        border: selected ? `1px solid #57c7ff` : "1px solid #0a3d7a",
-        padding: "6px 4px",
-        textAlign: "center",
-        borderRadius: 3,
-        fontSize: 10,
-        color: "#aaa",
-        cursor: "pointer",
-        fontFamily: FONT,
-        transition: "border-color 0.1s",
+        border: selected ? "1px solid #57c7ff" : "1px solid #0a3d7a",
       }}
       onMouseEnter={(e) => {
         if (!selected)
@@ -131,19 +108,13 @@ function BuildingTile({
       }}
     >
       <span
-        style={{
-          fontSize: 14,
-          fontWeight: "bold",
-          display: "block",
-          marginBottom: 2,
-          color: glyphColor,
-          fontFamily: FONT,
-        }}
+        className="text-sm font-bold block mb-0.5 font-mono"
+        style={{ color: glyphColor }}
       >
         {glyph}
       </span>
-      <span style={{ color: "#a0b0c0", fontSize: 9, display: "block" }}>[{shortcut}]</span>
-      <span style={{ color: "#aaa", fontSize: 10 }}>{name}</span>
+      <span className="text-pw-text-dim text-[9px] block">[{shortcut}]</span>
+      <span className="text-[#aaa] text-[10px]">{name}</span>
     </button>
   );
 }

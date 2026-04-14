@@ -25,10 +25,19 @@
   --color-pw-text: #e0e0e0;
   --color-pw-text-dim: #a0b0c0;
   --color-pw-text-muted: #7dd3fc;
+  --color-pw-text-faint: #7090b0;
+  --color-pw-text-hint: #5a7a9a;
+  --color-pw-chain: #8aa0b8;
   --color-pw-iron-ore: #c87533;
   --color-pw-copper-ore: #c87533;
   --color-pw-grid-dot: #0a2a4a;
   --color-pw-grid-line: #0a1f3d;
+  --color-pw-building-selected-bg: #0a1f3d;
+  --color-pw-building-tile-bg: #001433;
+  --color-pw-building-selected-border: #57c7ff;
+  --color-pw-building-tile-border: #0a3d7a;
+  --color-pw-canvas-border: #1a2a3a;
+  --color-pw-connecting: #6b7280;
   --font-mono: Menlo, Monaco, 'Courier New', monospace;
 }
 

@@ -129,59 +129,23 @@ export default function GamePage() {
 
   if (!viewportOk) {
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh",
-          background: "#00214d",
-          color: "#c0c0c0",
-          fontFamily: "Menlo, Monaco, 'Courier New', monospace",
-          textAlign: "center",
-          padding: 32,
-          fontSize: 12,
-        }}
-      >
+      <div className="flex items-center justify-center h-screen bg-pw-bg text-[#c0c0c0] font-mono text-center p-8 text-xs">
         PIPEWAR requires a larger viewport. Minimum 1100×640.
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        background: "#00214d",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
+    <div className="flex flex-col h-screen bg-pw-bg relative overflow-hidden">
       <HUD onPause={handlePause} />
       <WaveAlert />
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+      <div className="flex flex-1 overflow-hidden">
         <BuildPanel />
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "#00214d",
-          }}
-        >
+        <div className="flex-1 flex items-center justify-center bg-pw-bg">
           {gameId ? (
             <GameCanvas onCellClick={handleCellClick} onCellHover={handleCellHover} />
           ) : (
-            <div
-              style={{
-                color: "#6b7280",
-                fontFamily: "Menlo, Monaco, 'Courier New', monospace",
-                fontSize: 12,
-              }}
-            >
+            <div className="text-pw-connecting font-mono text-xs">
               CONNECTING...
             </div>
           )}

@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import { createSession, getSessionMe, createGame, getCurrentGame } from "@/lib/api";
 import { useGameStore } from "@/stores/gameStore";
 
-const FONT = "Menlo, Monaco, 'Courier New', monospace";
-
 export function LandingPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -44,42 +42,18 @@ export function LandingPage() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#00214d",
-        fontFamily: FONT,
-      }}
-    >
-      <div style={{ maxWidth: 520, textAlign: "center", padding: 32 }}>
+    <div className="min-h-screen flex items-center justify-center bg-pw-bg font-mono">
+      <div className="max-w-[520px] text-center p-8">
         {/* Title */}
-        <h1
-          style={{
-            fontSize: 56,
-            fontWeight: "bold",
-            color: "#5af78e",
-            margin: "0 0 12px",
-            letterSpacing: "0.08em",
-          }}
-        >
+        <h1 className="text-[56px] font-bold text-pw-accent m-0 mb-3 tracking-[0.08em]">
           PIPEWAR
         </h1>
 
         {/* Tagline */}
-        <p style={{ fontSize: 13, color: "#a0b0c0", margin: "0 0 8px" }}>
+        <p className="text-[13px] text-pw-text-dim m-0 mb-2">
           Build. Produce. Defend.
         </p>
-        <p
-          style={{
-            fontSize: 11,
-            color: "#7090b0",
-            margin: "0 0 32px",
-            lineHeight: 1.7,
-          }}
-        >
+        <p className="text-[11px] text-pw-text-faint m-0 mb-8 leading-[1.7]">
           Build production pipelines on a 20×20 grid.
           <br />
           Defend against hacker waves. Produce 20 Advanced Circuits to win.
@@ -89,20 +63,11 @@ export function LandingPage() {
         <button
           onClick={handleNewGame}
           disabled={loading}
+          className="w-[220px] h-11 bg-transparent text-xs font-bold block mx-auto rounded-[3px] tracking-[0.05em] font-mono"
           style={{
-            width: 220,
-            height: 44,
-            background: "transparent",
             border: `1px solid ${error ? "#ff4757" : "#5af78e"}`,
             color: error ? "#ff4757" : "#5af78e",
-            fontSize: 12,
-            fontWeight: "bold",
             cursor: loading ? "wait" : "pointer",
-            fontFamily: FONT,
-            display: "block",
-            margin: "0 auto",
-            borderRadius: 3,
-            letterSpacing: "0.05em",
           }}
           onMouseEnter={(e) => {
             if (!loading) {
@@ -120,7 +85,7 @@ export function LandingPage() {
         <ResumeButton onResume={handleResume} />
 
         {/* Keyboard hint */}
-        <div style={{ marginTop: 40, fontSize: 9, color: "#5a7a9a", lineHeight: 1.8 }}>
+        <div className="mt-10 text-[9px] text-pw-text-hint leading-[1.8]">
           1-4: production buildings &nbsp;|&nbsp; 5-8: defenses
           <br />
           R: rotate belt &nbsp;|&nbsp; Space: pause &nbsp;|&nbsp; Del: remove
@@ -142,18 +107,10 @@ function ResumeButton({ onResume }: { onResume: () => void }) {
   if (!hasActiveGame) return null;
 
   return (
-    <div style={{ marginTop: 10 }}>
+    <div className="mt-2.5">
       <button
         onClick={onResume}
-        style={{
-          background: "transparent",
-          border: "none",
-          color: "#a0b0c0",
-          fontSize: 11,
-          cursor: "pointer",
-          fontFamily: FONT,
-          textDecoration: "underline",
-        }}
+        className="bg-transparent border-none text-pw-text-dim text-[11px] cursor-pointer font-mono underline"
         onMouseEnter={(e) => {
           (e.currentTarget as HTMLButtonElement).style.color = "#c0c0c0";
         }}
