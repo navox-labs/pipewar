@@ -22,13 +22,13 @@ from backend.models.enums import (
 )
 from backend.models.game_state import Cell, Building, Resource, Attacker, Wave, MachineMetrics
 from backend.engine.grid import parse_grid, serialize_grid
-from backend.engine.production import tick_machine
+from backend.engine.production import tick_machine, _push_outputs
 from backend.engine.belts import tick_belts
 from backend.engine.metrics import compute_metrics
 from backend.combat.pathfinding import compute_defense_coverage
 from backend.combat.attacker import spawn_attacker, tick_attacker, ATTACKER_STATS
 from backend.combat.wave_generator import generate_wave, hp_scale_for_wave, spawn_type_for_index
-from backend.combat.defense import find_exposed_machines, slow_ddos_bots
+from backend.combat.defense import find_exposed_machines, slow_ddos_bots, check_circuit_breaker_activation, CIRCUIT_BREAKER_DURATION
 
 log = logging.getLogger(__name__)
 
@@ -219,7 +219,13 @@ class GameEngine:
 
         # Combat
         self._tick_wave_spawner()
-        damage_this_tick = self._tick_attackers()
+        if check_circuit_breaker_activation(self.grid):
+            self._circuit_breaker_active_ticks = CIRCUIT_BREAKER_DURATION
+        if self._circuit_breaker_active_ticks > 0:
+            self._circuit_breaker_active_ticks -= 1
+            damage_this_tick = 0
+        else:
+            damage_this_tick = self._tick_attackers()
         self._tick_uptime()
         self._check_end_conditions()
 
@@ -262,6 +268,8 @@ class GameEngine:
         for pos, cell in self.grid.items():
             if cell.building and cell.building.type in PRODUCTION_TYPES:
                 total += tick_machine(cell, self.grid)
+                if cell.building.type == BuildingType.MINER:
+                    _push_outputs(cell, self.grid)
         return total
 
     def _tick_wave_spawner(self):

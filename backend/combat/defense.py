@@ -37,7 +37,7 @@ def check_circuit_breaker_activation(
     for cell in cells.values():
         b = cell.building
         if b and b.type == BuildingType.CIRCUIT_BREAKER:
-            if b.health > 0 and b.health < b.health * CIRCUIT_BREAKER_THRESHOLD:
+            if b.health > 0 and b.health < 100 * CIRCUIT_BREAKER_THRESHOLD:
                 return True
     return False
 

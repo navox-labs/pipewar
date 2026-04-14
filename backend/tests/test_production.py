@@ -1,9 +1,9 @@
 """Unit tests for production machine logic."""
 import pytest
 from backend.engine.grid import build_initial_grid, parse_grid
-from backend.engine.production import tick_machine
+from backend.engine.production import tick_machine, _push_outputs, _pull_inputs
 from backend.models.enums import BuildingType, Direction, ItemType
-from backend.models.game_state import Building, Cell
+from backend.models.game_state import Building, Cell, BeltItem
 
 
 def make_grid():
@@ -117,3 +117,62 @@ def test_machine_does_not_produce_when_health_zero():
     result = tick_machine(cell, grid)
     assert result == 0
     assert cell.building.processing_ticks_remaining == 0
+
+
+def test_push_outputs_miner_to_adjacent_belt():
+    grid = make_grid()
+    miner = Building(type=BuildingType.MINER, direction=Direction.EAST)
+    miner.output_buffer["iron_ore"] = 2
+    grid[(5, 5)].building = miner
+    belt = Building(type=BuildingType.BELT, direction=Direction.EAST)
+    grid[(6, 5)].building = belt
+    _push_outputs(grid[(5, 5)], grid)
+    assert miner.output_buffer.get("iron_ore", 0) == 1
+    assert len(belt.belt_items) == 1
+    assert belt.belt_items[0].item_type == ItemType.IRON_ORE
+
+
+def test_push_outputs_miner_no_push_when_belt_full():
+    from backend.engine.belts import MAX_BELT_ITEMS
+    grid = make_grid()
+    miner = Building(type=BuildingType.MINER, direction=Direction.EAST)
+    miner.output_buffer["iron_ore"] = 1
+    grid[(5, 5)].building = miner
+    belt = Building(type=BuildingType.BELT, direction=Direction.EAST)
+    for _ in range(MAX_BELT_ITEMS):
+        belt.belt_items.append(BeltItem(item_type=ItemType.IRON_ORE, position=0.5))
+    grid[(6, 5)].building = belt
+    _push_outputs(grid[(5, 5)], grid)
+    assert miner.output_buffer.get("iron_ore", 0) == 1
+
+
+def test_push_outputs_noop_for_non_miner():
+    grid = make_grid()
+    smelter = Building(type=BuildingType.SMELTER, direction=Direction.EAST)
+    smelter.output_buffer["iron_plate"] = 1
+    grid[(5, 5)].building = smelter
+    belt = Building(type=BuildingType.BELT, direction=Direction.EAST)
+    grid[(6, 5)].building = belt
+    _push_outputs(grid[(5, 5)], grid)
+    assert len(belt.belt_items) == 0
+
+
+def test_pull_inputs_checks_all_four_neighbours():
+    """Bug #4: break was changed to continue so all 4 neighbours are checked."""
+    grid = make_grid()
+    asm = Building(type=BuildingType.ASSEMBLER, direction=Direction.EAST)
+    grid[(5, 5)].building = asm
+
+    # Place two production machines adjacent with different outputs
+    smelter_north = Building(type=BuildingType.SMELTER, direction=Direction.SOUTH)
+    smelter_north.output_buffer["iron_plate"] = 1
+    grid[(5, 4)].building = smelter_north
+
+    smelter_west = Building(type=BuildingType.SMELTER, direction=Direction.EAST)
+    smelter_west.output_buffer["copper_wire"] = 1
+    grid[(4, 5)].building = smelter_west
+
+    _pull_inputs(grid[(5, 5)], grid)
+    # Both items should be pulled in (not just the first one)
+    assert asm.input_buffer.get("iron_plate", 0) == 1
+    assert asm.input_buffer.get("copper_wire", 0) == 1

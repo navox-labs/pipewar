@@ -261,8 +261,11 @@ export function GameCanvas({ onCellClick, onCellHover }: Props) {
       );
       ctx.globalAlpha = isOccupied ? 0.3 : 0.5;
       ctx.fillStyle = isOccupied ? COLORS.critical : (isDefense ? COLORS.defense : COLORS.machine);
+      const previewGlyph = s.selectedBuilding === "belt"
+        ? (BUILDING_GLYPHS[`belt_${s.selectedDirection}`] ?? BUILDING_GLYPHS["belt"] ?? "─")
+        : (BUILDING_GLYPHS[s.selectedBuilding] ?? "?");
       ctx.fillText(
-        BUILDING_GLYPHS[s.selectedBuilding] ?? "?",
+        previewGlyph,
         hx * CELL_SIZE + CELL_SIZE / 2,
         hy * CELL_SIZE + CELL_SIZE / 2
       );

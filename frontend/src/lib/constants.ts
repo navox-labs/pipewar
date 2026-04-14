@@ -40,6 +40,7 @@ export const BUILDING_GLYPHS: Record<string, string> = {
   miner: "M",
   smelter: "S",
   assembler: "A",
+  belt: "─",
   belt_east: "─",
   belt_west: "─",
   belt_north: "│",

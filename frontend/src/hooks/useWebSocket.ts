@@ -53,6 +53,12 @@ export function useWebSocket(gameId: string | null) {
         case "game_over":
           store.applyGameOver(msg);
           break;
+        case "building_placed":
+          store.applyBuildingPlaced(msg);
+          break;
+        case "building_removed":
+          store.applyBuildingRemoved(msg);
+          break;
         case "error":
           store.addEvent({
             timestamp: new Date().toLocaleTimeString("en-US", { hour12: false }),

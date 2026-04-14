@@ -230,7 +230,7 @@ async def _handle_message(engine: GameEngine, ws: WebSocket, msg):
                 "type": "building_placed",
                 "x": msg.x,
                 "y": msg.y,
-                "building_type": msg.building_type.value if hasattr(msg.building_type, 'value') else msg.building_type,
+                "building_type": BuildingType(msg.building_type).value,
             }))
 
     elif msg_type == "remove_building":

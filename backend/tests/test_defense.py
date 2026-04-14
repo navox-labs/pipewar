@@ -2,7 +2,10 @@
 import pytest
 from backend.engine.grid import build_initial_grid, parse_grid
 from backend.combat.pathfinding import compute_defense_coverage
-from backend.combat.defense import find_exposed_machines, slow_ddos_bots
+from backend.combat.defense import (
+    find_exposed_machines, slow_ddos_bots, check_circuit_breaker_activation,
+    CIRCUIT_BREAKER_THRESHOLD,
+)
 from backend.combat.attacker import spawn_attacker, ATTACKER_STATS
 from backend.models.enums import BuildingType, Direction, AttackType
 from backend.models.game_state import Building, Attacker
@@ -78,3 +81,42 @@ def test_non_ddos_not_affected_by_slow():
     original_speed = attacker.speed
     slow_ddos_bots([attacker], coverage)
     assert attacker.speed == original_speed
+
+
+def test_circuit_breaker_activates_below_30_percent_health():
+    grid = make_grid()
+    cb = Building(type=BuildingType.CIRCUIT_BREAKER, direction=Direction.EAST)
+    cb.health = 29  # below 30% of 100
+    grid[(5, 5)].building = cb
+    assert check_circuit_breaker_activation(grid) is True
+
+
+def test_circuit_breaker_does_not_activate_at_full_health():
+    grid = make_grid()
+    cb = Building(type=BuildingType.CIRCUIT_BREAKER, direction=Direction.EAST)
+    cb.health = 100
+    grid[(5, 5)].building = cb
+    assert check_circuit_breaker_activation(grid) is False
+
+
+def test_circuit_breaker_does_not_activate_at_zero_health():
+    grid = make_grid()
+    cb = Building(type=BuildingType.CIRCUIT_BREAKER, direction=Direction.EAST)
+    cb.health = 0
+    grid[(5, 5)].building = cb
+    assert check_circuit_breaker_activation(grid) is False
+
+
+def test_circuit_breaker_threshold_boundary():
+    grid = make_grid()
+    cb = Building(type=BuildingType.CIRCUIT_BREAKER, direction=Direction.EAST)
+    cb.health = int(100 * CIRCUIT_BREAKER_THRESHOLD)  # exactly 30
+    grid[(5, 5)].building = cb
+    # health == 30, threshold is < 30 -- should NOT activate
+    assert check_circuit_breaker_activation(grid) is False
+
+
+def test_no_circuit_breaker_in_grid_returns_false():
+    grid = make_grid()
+    # No circuit breaker placed
+    assert check_circuit_breaker_activation(grid) is False

@@ -172,7 +172,44 @@ def _pull_inputs(cell: Cell, cells: dict[tuple[int, int], Cell]):
                         del nb.output_buffer[item_key]
                     b.input_buffer[item_key] = b.input_buffer.get(item_key, 0) + 1
                     break  # pull one item per neighbour per tick
-            break
+            continue
+
+
+def _push_outputs(cell: Cell, cells: dict[tuple[int, int], Cell]):
+    """Push items from miner output_buffer onto the adjacent belt or machine in the miner's facing direction."""
+    b = cell.building
+    if b.type != BuildingType.MINER:
+        return
+    if not b.output_buffer:
+        return
+    dx, dy = direction_delta(b.direction)
+    nx, ny = cell.x + dx, cell.y + dy
+    if not (0 <= nx < GRID_SIZE and 0 <= ny < GRID_SIZE):
+        return
+    neighbour = cells.get((nx, ny))
+    if neighbour is None or neighbour.building is None:
+        return
+    nb = neighbour.building
+    for item_key, qty in list(b.output_buffer.items()):
+        if qty <= 0 or item_key.startswith("__"):
+            continue
+        if nb.type == BuildingType.BELT:
+            from backend.engine.belts import MAX_BELT_ITEMS
+            from backend.models.game_state import BeltItem
+            if len(nb.belt_items) < MAX_BELT_ITEMS:
+                nb.belt_items.append(BeltItem(item_type=ItemType(item_key), position=0.0))
+                b.output_buffer[item_key] -= 1
+                if b.output_buffer[item_key] <= 0:
+                    del b.output_buffer[item_key]
+                break
+        elif nb.type in PRODUCTION_TYPES:
+            total_input = sum(v for k, v in nb.input_buffer.items() if not k.startswith("__"))
+            if total_input < INPUT_BUFFER_CAPACITY:
+                nb.input_buffer[item_key] = nb.input_buffer.get(item_key, 0) + 1
+                b.output_buffer[item_key] -= 1
+                if b.output_buffer[item_key] <= 0:
+                    del b.output_buffer[item_key]
+                break
 
 
 def _pull_from_belt(machine: Building, belt: Building, dx: int, dy: int):

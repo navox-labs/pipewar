@@ -18,3 +18,15 @@
 - Font size targets per spec: HUD labels 14px / values 18px, BuildPanel name 16px / shortcut 14px, Metrics headers 14px / values 16px, event log 14px, GameOverModal title 36px / stats 18px
 - Canvas glyph font: main font set once at line ~58 in GameCanvas.tsx, reset line after attacker glyph draw -- both bumped 16->20px
 - Build clean: 0 errors, 0 warnings (only pre-existing workspace root lockfile warning from turbopack)
+
+## 2026-04-14 -- Bug fix pass: 8 critical/moderate bugs fixed
+- Bug #1: defense.py:40 circuit breaker check was `b.health < b.health * 0.3` (always false) -- fixed to `b.health < 100 * 0.3`
+- Bug #2: circuit breaker was dead code -- wired check_circuit_breaker_activation() into _tick() in game_engine.py; when active, attacker movement is skipped for CIRCUIT_BREAKER_DURATION ticks
+- Bug #3: BUILDING_GLYPHS["belt"] key added as fallback; hover preview in GameCanvas now uses `belt_${direction}` for directional glyph
+- Bug #4: production.py _pull_inputs had `break` after pulling from production machine -- changed to `continue` so all 4 neighbours are checked (fixes assembler starvation)
+- Bug #5: Miners had no push logic -- added _push_outputs() in production.py, called from _tick_machines() for each miner cell after tick_machine
+- Bug #6: websocket.py building_placed response used fragile hasattr check -- simplified to BuildingType(msg.building_type).value
+- Bug #7: Verified correct behavior -- defense DPS is applied before attacker movement, so camped attackers CAN be killed. No fix needed.
+- Bug #8: Added applyBuildingPlaced/applyBuildingRemoved actions to gameStore.ts; wired building_placed and building_removed cases in useWebSocket.ts
+- Test count: 56 -> 65 (9 new unit tests added across test_defense.py and test_production.py)
+- _push_outputs is a module-level function (not method) -- import it explicitly in game_engine.py

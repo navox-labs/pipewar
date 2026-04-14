@@ -10,6 +10,8 @@ import type {
   AttackType,
   BeltItemUpdate,
   MachineStateUpdate,
+  BuildingPlacedMsg,
+  BuildingRemovedMsg,
 } from "@/lib/types";
 
 interface GameStore {
@@ -74,6 +76,8 @@ interface GameStore {
   applyWaveStart: (msg: import("@/lib/types").WaveStartMsg) => void;
   applyWaveEnd: (msg: import("@/lib/types").WaveEndMsg) => void;
   applyGameOver: (msg: import("@/lib/types").GameOverMsg) => void;
+  applyBuildingPlaced: (msg: BuildingPlacedMsg) => void;
+  applyBuildingRemoved: (msg: BuildingRemovedMsg) => void;
   addEvent: (event: GameEvent) => void;
   selectBuilding: (type: BuildingType | null) => void;
   setDirection: (dir: Direction) => void;
@@ -166,6 +170,41 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set({
       gameStatus: msg.result,
       gameOverResult: msg,
+    }),
+
+  applyBuildingPlaced: (msg) =>
+    set((s) => {
+      const key = `${msg.x},${msg.y}`;
+      const isDefense = ["rate_limiter", "waf", "auth_middleware", "circuit_breaker"].includes(msg.building_type);
+      const buildingData = {
+        type: msg.building_type,
+        direction: s.selectedDirection,
+        health: 100,
+      };
+      if (isDefense) {
+        return {
+          grid: {
+            ...s.grid,
+            defenses: { ...s.grid.defenses, [key]: buildingData },
+          },
+        };
+      }
+      return {
+        grid: {
+          ...s.grid,
+          buildings: { ...s.grid.buildings, [key]: buildingData },
+        },
+      };
+    }),
+
+  applyBuildingRemoved: (msg) =>
+    set((s) => {
+      const key = `${msg.x},${msg.y}`;
+      const buildings = { ...s.grid.buildings };
+      const defenses = { ...s.grid.defenses };
+      delete buildings[key];
+      delete defenses[key];
+      return { grid: { ...s.grid, buildings, defenses } };
     }),
 
   addEvent: (event) =>
