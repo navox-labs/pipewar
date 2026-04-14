@@ -1,5 +1,36 @@
 "use client";
 import { useGameStore } from "@/stores/gameStore";
+import { BUILDING_COLORS, BUILDING_GLYPHS } from "@/lib/constants";
+
+const FONT = "Menlo, Monaco, 'Courier New', monospace";
+
+// Attacker type colors matching scene3
+const ATTACKER_COLORS: Record<string, string> = {
+  ddos_bot: "#ff4757",
+  sql_inject: "#ff9500",
+  cred_stuffer: "#ff6ac1",
+};
+
+function attackerColor(type: string): string {
+  return ATTACKER_COLORS[type] ?? "#ff4757";
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        color: "#888",
+        fontSize: 10,
+        textTransform: "uppercase",
+        letterSpacing: "1px",
+        marginBottom: 6,
+        fontFamily: FONT,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 export function MetricsPanel() {
   const {
@@ -13,141 +44,154 @@ export function MetricsPanel() {
     return b.items_per_min - a.items_per_min;
   });
 
-  const maxRate = Math.max(...machines.map((m) => m.items_per_min), 1);
-
-  const defenses = Object.entries({
-    ...grid.defenses,
-  }).map(([key, b]) => ({
+  const defenses = Object.entries(grid.defenses).map(([key, b]) => ({
     key,
     type: b.type,
     health: b.health,
     active: b.health > 0,
   }));
 
+  // Group defenses by type for compact display
+  const defenseGroups: Record<string, number> = {};
+  defenses.forEach(({ type }) => {
+    defenseGroups[type] = (defenseGroups[type] ?? 0) + 1;
+  });
+
   return (
     <div
       style={{
         width: 200,
-        background: "#001a3d",
-        borderLeft: "1px solid #0a3d7a",
-        padding: 10,
+        background: "#0b1622",
+        borderLeft: "1px solid #1a2a3a",
+        padding: 12,
         display: "flex",
         flexDirection: "column",
-        gap: 10,
+        gap: 14,
         flexShrink: 0,
         overflowY: "auto",
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: FONT,
+        fontSize: 11,
       }}
     >
       {/* THROUGHPUT */}
-      <section>
-        <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 3, marginBottom: 6 }}>
-          THROUGHPUT
-        </div>
-        {sortedMachines.length === 0 && (
-          <div style={{ color: "#374151", fontSize: 11 }}>No machines placed</div>
-        )}
-        {sortedMachines.map((m) => (
-          <div key={m.pos.join(",")} style={{ marginBottom: 4 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
-              <span style={{ color: m.is_bottleneck ? "#f59e0b" : "#7dd3fc" }}>
-                {m.pos[0]},{m.pos[1]}
-                {m.is_bottleneck ? " ⚠" : ""}
-              </span>
-              <span style={{ color: "#e0e0e0" }}>{m.items_per_min.toFixed(0)}/min</span>
-            </div>
-            <div style={{ height: 3, background: "#0a3d7a", marginTop: 2 }}>
-              <div
+      <div>
+        <SectionTitle>Throughput</SectionTitle>
+        {sortedMachines.length === 0 ? (
+          <div style={{ color: "#555", fontSize: 11 }}>No machines placed</div>
+        ) : (
+          sortedMachines.slice(0, 6).map((m) => (
+            <div
+              key={m.pos.join(",")}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: 3,
+                fontSize: 11,
+              }}
+            >
+              <span
                 style={{
-                  height: 3,
-                  width: `${(m.items_per_min / maxRate) * 100}%`,
-                  background: m.is_bottleneck ? "#f59e0b" : "#38bdf8",
-                  transition: "none",
+                  color: m.is_bottleneck ? "#f59e0b" : "#5af78e",
+                  fontFamily: FONT,
                 }}
-              />
+              >
+                {m.pos[0]},{m.pos[1]}
+                {m.is_bottleneck ? " !" : ""}
+              </span>
+              <span style={{ color: "#888", fontFamily: FONT }}>
+                {m.items_per_min.toFixed(0)}/min
+              </span>
             </div>
-          </div>
-        ))}
-      </section>
+          ))
+        )}
+      </div>
 
       {/* WAVES */}
-      <section>
-        <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 3, marginBottom: 6 }}>
-          WAVES
-        </div>
-        <div style={{ fontSize: 12, color: "#e0e0e0" }}>
-          Wave {waveNumber || "—"}
+      <div>
+        <SectionTitle>Waves</SectionTitle>
+        <div style={{ fontSize: 12 }}>
+          <span style={{ color: "#e0e0e0", fontWeight: "bold" }}>
+            Wave {waveNumber || "—"}
+          </span>
         </div>
         {waveActive ? (
           <>
-            <div style={{ fontSize: 11, color: "#f59e0b" }}>{waveAttackerCount} attackers</div>
-            <div style={{ fontSize: 10, color: "#6b7280", marginTop: 2 }}>
+            <div style={{ color: "#ff4757", fontWeight: "bold", fontSize: 11, marginTop: 2 }}>
+              {waveAttackerCount} attackers
+            </div>
+            <div style={{ marginTop: 4 }}>
               {waveAttackTypes.map((t) => (
-                <div key={t} style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#f43f5e", display: "inline-block" }} />
-                  {t.replace(/_/g, " ")}
+                <div
+                  key={t}
+                  style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, marginBottom: 2 }}
+                >
+                  <span
+                    style={{
+                      display: "inline-block",
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      background: attackerColor(t),
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span style={{ color: "#888" }}>{t.replace(/_/g, " ")}</span>
                 </div>
               ))}
             </div>
           </>
         ) : (
-          <div style={{ fontSize: 11, color: "#34d399" }}>
+          <div style={{ fontSize: 11, color: "#5af78e", marginTop: 2 }}>
             {waveNumber === 0 ? "Awaiting traffic..." : "CLEAR"}
           </div>
         )}
-      </section>
+      </div>
 
       {/* DEFENSES */}
-      <section>
-        <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 3, marginBottom: 6 }}>
-          DEFENSES
-        </div>
-        {defenses.length === 0 && (
-          <div style={{ color: "#374151", fontSize: 11 }}>No defenses placed</div>
+      <div>
+        <SectionTitle>Defenses</SectionTitle>
+        {Object.keys(defenseGroups).length === 0 ? (
+          <div style={{ color: "#555", fontSize: 11 }}>No defenses placed</div>
+        ) : (
+          Object.entries(defenseGroups).map(([type, count]) => {
+            const color = BUILDING_COLORS[type] ?? "#888";
+            const glyph = BUILDING_GLYPHS[type] ?? "?";
+            return (
+              <div key={type} style={{ fontSize: 11, color, marginBottom: 2 }}>
+                {glyph} {type.replace(/_/g, " ")} ×{count}
+              </div>
+            );
+          })
         )}
-        {defenses.map(({ key, type, active }) => (
-          <div key={key} style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 3 }}>
-            <span
-              style={{
-                width: 6, height: 6, borderRadius: "50%",
-                background: active ? "#34d399" : "#2a1a1a",
-                flexShrink: 0,
-              }}
-            />
-            <span style={{ fontSize: 11, color: "#e0e0e0" }}>
-              {type.replace(/_/g, " ")}
-            </span>
-            <span style={{ fontSize: 10, color: "#6b7280", marginLeft: "auto" }}>
-              {key}
-            </span>
-          </div>
-        ))}
-      </section>
+      </div>
 
       {/* EVENT LOG */}
-      <section style={{ marginTop: "auto" }}>
-        <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "1px solid #0a3d7a", paddingBottom: 3, marginBottom: 6 }}>
-          LOG
-        </div>
-        {events.length === 0 && (
-          <div style={{ color: "#374151", fontSize: 11 }}>No events yet</div>
+      <div style={{ flex: 1, overflow: "hidden" }}>
+        <SectionTitle>Log</SectionTitle>
+        {events.length === 0 ? (
+          <div style={{ color: "#555", fontSize: 10 }}>No events yet</div>
+        ) : (
+          events.slice(-8).map((ev, i) => (
+            <div
+              key={i}
+              style={{ marginBottom: 2, fontSize: 10, lineHeight: 1.4 }}
+            >
+              <span style={{ color: "#555" }}>{ev.timestamp} </span>
+              <span style={{ color: eventColor(ev.eventType) }}>{ev.message}</span>
+            </div>
+          ))
         )}
-        {events.map((ev, i) => (
-          <div key={i} style={{ marginBottom: 3, fontSize: 10 }}>
-            <span style={{ color: "#374151" }}>{ev.timestamp} </span>
-            <span style={{ color: eventColor(ev.eventType) }}>{ev.message}</span>
-          </div>
-        ))}
-      </section>
+      </div>
     </div>
   );
 }
 
 function eventColor(type: string): string {
   switch (type) {
-    case "attack": return "#f43f5e";
-    case "warning": return "#f87171";
-    case "success": return "#34d399";
-    default: return "#0a3d7a";
+    case "attack": return "#ff4757";
+    case "warning": return "#f59e0b";
+    case "success": return "#5af78e";
+    case "info": return "#f3f99d";
+    default: return "#888";
   }
 }

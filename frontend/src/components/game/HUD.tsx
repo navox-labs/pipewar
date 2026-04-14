@@ -1,15 +1,17 @@
 "use client";
 import { useGameStore } from "@/stores/gameStore";
 
+const FONT = "Menlo, Monaco, 'Courier New', monospace";
+
 interface Props {
   onPause: () => void;
 }
 
 function uptimeColor(pct: number): string {
-  if (pct >= 99.9) return "#34d399";
+  if (pct >= 99.9) return "#5af78e";
   if (pct >= 97) return "#e0e0e0";
   if (pct >= 95) return "#f59e0b";
-  return "#f43f5e";
+  return "#ff4757";
 }
 
 export function HUD({ onPause }: Props) {
@@ -21,68 +23,74 @@ export function HUD({ onPause }: Props) {
   return (
     <div
       style={{
-        height: 48,
-        background: "#001a3d",
-        borderBottom: "1px solid #0a3d7a",
         display: "flex",
-        alignItems: "center",
         justifyContent: "space-between",
-        padding: "0 16px",
+        alignItems: "center",
+        padding: "8px 16px",
+        background: "#0b1622",
+        borderBottom: "1px solid #1a2a3a",
         flexShrink: 0,
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: FONT,
       }}
     >
       {/* Left: production status */}
       <div>
-        <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-          PRODUCTION
+        <div style={{ fontSize: 10, color: "#888", textTransform: "uppercase", letterSpacing: "1px" }}>
+          Production
         </div>
-        <div style={{ color: "#7dd3fc", fontSize: 12 }}>
-          Traffic: {totalTraffic.toFixed(1)} items/min
+        <div style={{ fontSize: 12, color: "#c0c0c0" }}>
+          Traffic: <span style={{ color: "#5af78e" }}>{totalTraffic.toFixed(1)}</span> items/min
         </div>
       </div>
 
-      {/* Center: uptime */}
+      {/* Center: uptime (large) */}
       <div style={{ textAlign: "center" }}>
-        <div style={{ fontSize: 20, fontWeight: 700, color: uptimeColor(uptimePct), lineHeight: 1.2 }}>
+        <div style={{ fontSize: 20, fontWeight: "bold", color: uptimeColor(uptimePct), lineHeight: 1.2 }}>
           {uptimePct.toFixed(2)}%
         </div>
-        <div style={{ fontSize: 9, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+        <div style={{ fontSize: 11, color: "#888" }}>
           UPTIME &middot; {advancedCircuits}/20 CIRCUITS
         </div>
       </div>
 
-      {/* Right: wave status */}
+      {/* Right: wave info */}
       <div style={{ textAlign: "right" }}>
-        <div style={{ fontSize: 12, color: "#e0e0e0" }}>
-          WAVE {currentWave} {waveActive ? `— ${waveAttackerCount} attackers` : ""}
+        <div style={{ fontSize: 14, fontWeight: "bold", color: "#e0e0e0" }}>
+          WAVE {currentWave}
+          {waveActive && (
+            <span style={{ fontSize: 11, fontWeight: "normal", color: "#888" }}>
+              {" "}— {waveAttackerCount} attackers
+            </span>
+          )}
         </div>
         {waveActive ? (
-          <div style={{ fontSize: 10, color: "#6b7280" }}>
-            {waveAttackTypes.join(", ")}
+          <div style={{ fontSize: 11, color: "#888" }}>
+            {waveAttackTypes.map((t) => t.replace(/_/g, " ")).join(", ")}
           </div>
         ) : (
-          <div style={{ fontSize: 11, color: "#34d399" }}>
+          <div style={{ fontSize: 11, color: "#5af78e" }}>
             {currentWave === 0 ? "Build to trigger wave" : "CLEAR"}
           </div>
         )}
       </div>
 
-      {/* Connection + Pause */}
+      {/* Connection indicator + pause */}
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <span style={{ fontSize: 10, color: connected ? "#34d399" : "#f43f5e" }}>
+        <span style={{ fontSize: 10, color: connected ? "#5af78e" : "#ff4757" }}>
           {connected ? "●" : "○"}
         </span>
         <button
           onClick={onPause}
           style={{
-            background: "transparent",
-            border: "1px solid #0a3d7a",
-            color: "#60a5fa",
+            display: "inline-block",
+            padding: "2px 10px",
+            border: "1px solid #5af78e",
+            color: "#5af78e",
             fontSize: 11,
+            borderRadius: 3,
+            background: "transparent",
             cursor: "pointer",
-            fontFamily: "'JetBrains Mono', monospace",
-            padding: "2px 8px",
+            fontFamily: FONT,
           }}
         >
           {paused ? "RESUME" : "PAUSE"}

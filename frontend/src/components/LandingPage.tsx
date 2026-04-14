@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { createSession, getSessionMe, createGame, getCurrentGame } from "@/lib/api";
 import { useGameStore } from "@/stores/gameStore";
 
+const FONT = "Menlo, Monaco, 'Courier New', monospace";
+
 export function LandingPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -48,60 +50,81 @@ export function LandingPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#00214d",
-        fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+        background: "#0b1622",
+        fontFamily: FONT,
       }}
     >
-      <div style={{ maxWidth: 600, textAlign: "center", padding: 32 }}>
+      <div style={{ maxWidth: 520, textAlign: "center", padding: 32 }}>
+        {/* Title */}
         <h1
           style={{
-            fontSize: 64,
-            fontWeight: 700,
-            color: "#38bdf8",
-            margin: "0 0 16px",
-            letterSpacing: "0.05em",
+            fontSize: 56,
+            fontWeight: "bold",
+            color: "#5af78e",
+            margin: "0 0 12px",
+            letterSpacing: "0.08em",
           }}
         >
           PIPEWAR
         </h1>
-        <p style={{ fontSize: 18, color: "#6b7280", margin: "0 0 12px" }}>
+
+        {/* Tagline */}
+        <p style={{ fontSize: 13, color: "#888", margin: "0 0 8px" }}>
           Build. Produce. Defend.
         </p>
-        <p style={{ fontSize: 14, color: "#6b7280", margin: "0 0 32px", lineHeight: 1.6 }}>
+        <p
+          style={{
+            fontSize: 11,
+            color: "#555",
+            margin: "0 0 32px",
+            lineHeight: 1.7,
+          }}
+        >
           Build production pipelines on a 20×20 grid.
           <br />
           Defend against hacker waves. Produce 20 Advanced Circuits to win.
         </p>
 
+        {/* New Game button */}
         <button
           onClick={handleNewGame}
           disabled={loading}
           style={{
-            width: 240,
-            height: 48,
-            background: error ? "transparent" : "#1d4ed8",
-            border: "1px solid #0a3d7a",
-            color: error ? "#f43f5e" : "#fff",
-            fontSize: 16,
-            fontWeight: 700,
+            width: 220,
+            height: 44,
+            background: "transparent",
+            border: `1px solid ${error ? "#ff4757" : "#5af78e"}`,
+            color: error ? "#ff4757" : "#5af78e",
+            fontSize: 12,
+            fontWeight: "bold",
             cursor: loading ? "wait" : "pointer",
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: FONT,
             display: "block",
             margin: "0 auto",
+            borderRadius: 3,
+            letterSpacing: "0.05em",
           }}
           onMouseEnter={(e) => {
-            if (!loading && !error)
-              (e.currentTarget as HTMLButtonElement).style.background = "#38bdf8";
+            if (!loading) {
+              const btn = e.currentTarget as HTMLButtonElement;
+              btn.style.background = error ? "rgba(255,71,87,0.1)" : "rgba(90,247,142,0.1)";
+            }
           }}
           onMouseLeave={(e) => {
-            if (!error)
-              (e.currentTarget as HTMLButtonElement).style.background = "#1d4ed8";
+            (e.currentTarget as HTMLButtonElement).style.background = "transparent";
           }}
         >
           {loading ? "CONNECTING..." : error ? "FAILED — RETRY" : "NEW GAME"}
         </button>
 
         <ResumeButton onResume={handleResume} />
+
+        {/* Keyboard hint */}
+        <div style={{ marginTop: 40, fontSize: 9, color: "#333", lineHeight: 1.8 }}>
+          1-4: production buildings &nbsp;|&nbsp; 5-8: defenses
+          <br />
+          R: rotate belt &nbsp;|&nbsp; Space: pause &nbsp;|&nbsp; Del: remove
+        </div>
       </div>
     </div>
   );
@@ -110,7 +133,6 @@ export function LandingPage() {
 function ResumeButton({ onResume }: { onResume: () => void }) {
   const [hasActiveGame, setHasActiveGame] = useState<boolean | null>(null);
 
-  // Check for existing game on mount
   useState(() => {
     getSessionMe()
       .then((s) => setHasActiveGame(s.has_active_game))
@@ -120,17 +142,23 @@ function ResumeButton({ onResume }: { onResume: () => void }) {
   if (!hasActiveGame) return null;
 
   return (
-    <div style={{ marginTop: 8 }}>
+    <div style={{ marginTop: 10 }}>
       <button
         onClick={onResume}
         style={{
           background: "transparent",
           border: "none",
-          color: "#60a5fa",
-          fontSize: 14,
+          color: "#888",
+          fontSize: 11,
           cursor: "pointer",
-          fontFamily: "'JetBrains Mono', monospace",
+          fontFamily: FONT,
           textDecoration: "underline",
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.color = "#c0c0c0";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.color = "#888";
         }}
       >
         RESUME GAME

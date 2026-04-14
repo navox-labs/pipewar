@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
+const FONT = "Menlo, Monaco, 'Courier New', monospace";
 const STORAGE_KEY = "pipewar_tutorial_complete";
 
 interface TutorialStep {
@@ -12,7 +13,7 @@ interface TutorialStep {
 const STEPS: TutorialStep[] = [
   {
     title: "Step 1 of 5 — Mine Resources",
-    body: "Click an ore deposit on the grid to place a Miner. Iron ore (brown) and Copper ore (orange) are scattered across the map.",
+    body: "Click an ore deposit on the grid to place a Miner. Iron ore and Copper ore are scattered across the map.",
     highlight: "ore",
   },
   {
@@ -27,29 +28,28 @@ const STEPS: TutorialStep[] = [
   },
   {
     title: "Step 4 of 5 — Build Defenses",
-    body: "Place Rate Limiters, WAFs, Auth Middleware, and Circuit Breakers on the right side of the grid. Waves of attackers trigger once production reaches 10 items/min.",
+    body: "Place Rate Limiters, WAFs, Auth Middleware, and Circuit Breakers on the right side of the grid. Waves trigger once production reaches 10 items/min.",
     highlight: "defense",
   },
   {
     title: "Step 5 of 5 — Win Condition",
-    body: "Produce 20 Advanced Circuits while maintaining 99.9% uptime. Circuit chain: Ore \u2192 Smelter \u2192 Plates \u2192 Assembler \u2192 Circuits.",
+    body: "Produce 20 Advanced Circuits while maintaining 99.9% uptime. Circuit chain: Ore → Smelter → Plates → Assembler → Circuits.",
     highlight: "goal",
   },
 ];
 
-// Arrow component — points toward a region of the canvas
 function Arrow({ direction }: { direction: "left" | "right" | "down" | "up" }) {
   const arrows: Record<string, string> = {
-    left: "\u2190",
-    right: "\u2192",
-    down: "\u2193",
-    up: "\u2191",
+    left: "←",
+    right: "→",
+    down: "↓",
+    up: "↑",
   };
   return (
     <span
       style={{
-        fontSize: 32,
-        color: "#38bdf8",
+        fontSize: 24,
+        color: "#5af78e",
         display: "inline-block",
         animation: "pulse-arrow 1s ease-in-out infinite",
       }}
@@ -59,22 +59,21 @@ function Arrow({ direction }: { direction: "left" | "right" | "down" | "up" }) {
   );
 }
 
-// What region to visually annotate per step
 function StepAnnotation({ highlight }: { highlight: TutorialStep["highlight"] }) {
+  const annotationStyle = (borderColor: string, color: string) => ({
+    padding: "6px 12px",
+    border: `2px solid ${borderColor}`,
+    color,
+    fontSize: 12,
+    fontFamily: FONT,
+    animation: "pulse-border 1.2s ease-in-out infinite",
+  });
+
   if (highlight === "ore") {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
         <Arrow direction="right" />
-        <div
-          style={{
-            padding: "6px 12px",
-            border: "2px solid #854d0e",
-            color: "#b45309",
-            fontSize: 14,
-            fontFamily: "'JetBrains Mono', monospace",
-            animation: "pulse-border 1.2s ease-in-out infinite",
-          }}
-        >
+        <div style={annotationStyle("#c87533", "#c87533")}>
           ░ Ore Deposits — scattered on the grid
         </div>
       </div>
@@ -82,76 +81,40 @@ function StepAnnotation({ highlight }: { highlight: TutorialStep["highlight"] })
   }
   if (highlight === "adjacent") {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
         <Arrow direction="right" />
-        <div
-          style={{
-            padding: "6px 12px",
-            border: "2px solid #38bdf8",
-            color: "#7dd3fc",
-            fontSize: 14,
-            fontFamily: "'JetBrains Mono', monospace",
-            animation: "pulse-border 1.2s ease-in-out infinite",
-          }}
-        >
-          [M] &#x2192; [S] &nbsp; Miner adjacent to Smelter
+        <div style={annotationStyle("#57c7ff", "#57c7ff")}>
+          [M] → [S] &nbsp; Miner adjacent to Smelter
         </div>
       </div>
     );
   }
   if (highlight === "belt") {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
         <Arrow direction="right" />
-        <div
-          style={{
-            padding: "6px 12px",
-            border: "2px solid #1e4080",
-            color: "#60a5fa",
-            fontSize: 14,
-            fontFamily: "'JetBrains Mono', monospace",
-            animation: "pulse-border 1.2s ease-in-out infinite",
-          }}
-        >
-          [M] &#x2500;&#x2500;&#x2192; [S] &nbsp; Belt connects them
+        <div style={annotationStyle("#4a5568", "#888")}>
+          [M] ──→ [S] &nbsp; Belt connects them
         </div>
       </div>
     );
   }
   if (highlight === "defense") {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
         <Arrow direction="right" />
-        <div
-          style={{
-            padding: "6px 12px",
-            border: "2px solid #1d4ed8",
-            color: "#60a5fa",
-            fontSize: 14,
-            fontFamily: "'JetBrains Mono', monospace",
-            animation: "pulse-border 1.2s ease-in-out infinite",
-          }}
-        >
-          [T] [W] [@] [&#x25C6;] &nbsp; Right side of grid
+        <div style={annotationStyle("#5af78e", "#5af78e")}>
+          [T] [W] [@] [◆] &nbsp; Right side of grid
         </div>
       </div>
     );
   }
   if (highlight === "goal") {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
         <Arrow direction="right" />
-        <div
-          style={{
-            padding: "6px 12px",
-            border: "2px solid #34d399",
-            color: "#34d399",
-            fontSize: 14,
-            fontFamily: "'JetBrains Mono', monospace",
-            animation: "pulse-border 1.2s ease-in-out infinite",
-          }}
-        >
-          20 &#x25C6; Advanced Circuits @ 99.9% uptime
+        <div style={annotationStyle("#5af78e", "#5af78e")}>
+          20 ◆ Advanced Circuits @ 99.9% uptime
         </div>
       </div>
     );
@@ -190,7 +153,6 @@ export function TutorialOverlay() {
 
   return (
     <>
-      {/* Keyframe styles injected once */}
       <style>{`
         @keyframes pulse-border {
           0%, 100% { opacity: 1; }
@@ -202,18 +164,18 @@ export function TutorialOverlay() {
         }
       `}</style>
 
-      {/* Semi-transparent dark backdrop */}
+      {/* Backdrop */}
       <div
         style={{
           position: "fixed",
           inset: 0,
-          background: "rgba(0, 10, 28, 0.72)",
+          background: "rgba(0, 8, 20, 0.78)",
           zIndex: 800,
           pointerEvents: "none",
         }}
       />
 
-      {/* Tutorial popover — centered, above backdrop */}
+      {/* Tutorial card */}
       <div
         style={{
           position: "fixed",
@@ -221,56 +183,57 @@ export function TutorialOverlay() {
           left: "50%",
           transform: "translate(-50%, -50%)",
           zIndex: 900,
-          width: 520,
-          background: "#001a3d",
-          border: "2px solid #0a3d7a",
-          padding: "32px 36px",
-          fontFamily: "'JetBrains Mono', monospace",
-          boxShadow: "0 0 40px rgba(56, 189, 248, 0.15)",
+          width: 500,
+          background: "#0d1926",
+          border: "1px solid #1a2a3a",
+          padding: "28px 32px",
+          fontFamily: FONT,
+          boxShadow: "0 0 40px rgba(90, 247, 142, 0.08)",
+          borderRadius: 4,
         }}
       >
-        {/* Step indicator dots */}
-        <div style={{ display: "flex", gap: 6, marginBottom: 20 }}>
+        {/* Step dots */}
+        <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
           {STEPS.map((_, i) => (
             <div
               key={i}
               style={{
-                width: 8,
-                height: 8,
+                width: 7,
+                height: 7,
                 borderRadius: "50%",
-                background: i === step ? "#38bdf8" : "#0a3d7a",
+                background: i === step ? "#5af78e" : "#1a2a3a",
                 transition: "background 0.2s",
               }}
             />
           ))}
         </div>
 
-        {/* Step title */}
+        {/* Title */}
         <div
           style={{
-            fontSize: 13,
-            color: "#38bdf8",
+            fontSize: 11,
+            color: "#5af78e",
             textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            marginBottom: 12,
+            letterSpacing: "1px",
+            marginBottom: 10,
           }}
         >
           {current.title}
         </div>
 
-        {/* Body text */}
+        {/* Body */}
         <div
           style={{
-            fontSize: 19,
-            color: "#e0e0e0",
-            lineHeight: 1.6,
-            marginBottom: 8,
+            fontSize: 13,
+            color: "#c0c0c0",
+            lineHeight: 1.65,
+            marginBottom: 6,
           }}
         >
           {current.body}
         </div>
 
-        {/* Visual annotation */}
+        {/* Annotation */}
         <StepAnnotation highlight={current.highlight} />
 
         {/* Actions */}
@@ -279,7 +242,7 @@ export function TutorialOverlay() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: 28,
+            marginTop: 24,
           }}
         >
           <button
@@ -287,17 +250,17 @@ export function TutorialOverlay() {
             style={{
               background: "transparent",
               border: "none",
-              color: "#374151",
-              fontSize: 13,
+              color: "#555",
+              fontSize: 11,
               cursor: "pointer",
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: FONT,
               padding: 0,
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.color = "#6b7280";
+              (e.currentTarget as HTMLButtonElement).style.color = "#888";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.color = "#374151";
+              (e.currentTarget as HTMLButtonElement).style.color = "#555";
             }}
           >
             SKIP TUTORIAL
@@ -306,23 +269,26 @@ export function TutorialOverlay() {
           <button
             onClick={next}
             style={{
-              background: "#1d4ed8",
-              border: "1px solid #38bdf8",
-              color: "#fff",
-              fontSize: 16,
-              fontWeight: 700,
+              background: "transparent",
+              border: "1px solid #5af78e",
+              color: "#5af78e",
+              fontSize: 12,
+              fontWeight: "bold",
               cursor: "pointer",
-              fontFamily: "'JetBrains Mono', monospace",
-              padding: "10px 28px",
+              fontFamily: FONT,
+              padding: "8px 24px",
+              borderRadius: 3,
+              letterSpacing: "0.05em",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = "#38bdf8";
+              const btn = e.currentTarget as HTMLButtonElement;
+              btn.style.background = "rgba(90,247,142,0.12)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = "#1d4ed8";
+              (e.currentTarget as HTMLButtonElement).style.background = "transparent";
             }}
           >
-            {isLast ? "START PLAYING" : "NEXT \u2192"}
+            {isLast ? "START PLAYING" : "NEXT →"}
           </button>
         </div>
       </div>

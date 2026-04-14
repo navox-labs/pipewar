@@ -34,7 +34,7 @@ export default function GamePage() {
   // Viewport size check
   useEffect(() => {
     function check() {
-      setViewportOk(window.innerWidth >= 1100 && window.innerHeight >= 740);
+      setViewportOk(window.innerWidth >= 1100 && window.innerHeight >= 640);
     }
     check();
     window.addEventListener("resize", check);
@@ -135,14 +135,15 @@ export default function GamePage() {
           alignItems: "center",
           justifyContent: "center",
           height: "100vh",
-          background: "#00214d",
-          color: "#e0e0e0",
-          fontFamily: "'JetBrains Mono', monospace",
+          background: "#0b1622",
+          color: "#c0c0c0",
+          fontFamily: "Menlo, Monaco, 'Courier New', monospace",
           textAlign: "center",
           padding: 32,
+          fontSize: 12,
         }}
       >
-        PIPEWAR requires a larger viewport. Minimum 1100x740.
+        PIPEWAR requires a larger viewport. Minimum 1100×640.
       </div>
     );
   }
@@ -153,7 +154,7 @@ export default function GamePage() {
         display: "flex",
         flexDirection: "column",
         height: "100vh",
-        background: "#00214d",
+        background: "#0b1622",
         position: "relative",
         overflow: "hidden",
       }}
@@ -168,13 +169,19 @@ export default function GamePage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "#00214d",
+            background: "#0b1622",
           }}
         >
           {gameId ? (
             <GameCanvas onCellClick={handleCellClick} onCellHover={handleCellHover} />
           ) : (
-            <div style={{ color: "#6b7280", fontFamily: "'JetBrains Mono', monospace" }}>
+            <div
+              style={{
+                color: "#555",
+                fontFamily: "Menlo, Monaco, 'Courier New', monospace",
+                fontSize: 12,
+              }}
+            >
               CONNECTING...
             </div>
           )}

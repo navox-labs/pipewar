@@ -7,35 +7,84 @@ export const CANVAS_SIZE = GRID_SIZE * CELL_SIZE; // 640
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 export const WS_BASE = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000";
 
-// Color palette (exact hex from UX spec -- also in CSS but needed for canvas)
+// Color palette — scene3 dark navy palette (also used for canvas rendering)
 export const COLORS = {
-  gridBg: "#001433",
-  gridLine: "#0a1f3d",
-  panelBg: "#001a3d",
-  panelBorder: "#0a3d7a",
-  machine: "#38bdf8",
-  machineText: "#7dd3fc",
-  circuit: "#34d399",
-  ironOre: "#854d0e",
-  copperOre: "#b45309",
-  oreBg: "#0f0a02",
-  belt: "#1e4080",
-  attacker: "#f43f5e",
-  trail: "#7f1d1d",
-  defense: "#1d4ed8",
-  defenseText: "#60a5fa",
+  // Canvas background
+  gridBg: "#0e1a27",
+  gridDot: "#1f3044",
+  gridLine: "#121e2c",
+
+  // Production buildings
+  miner: "#57c7ff",
+  minerBorder: "#3a8abf",
+  smelter: "#f3f99d",
+  smelterBorder: "#b3b56a",
+  assembler: "#ff6ac1",
+  assemblerBorder: "#b34a88",
+
+  // Belt
+  belt: "#4a5568",
+  beltItem: "#5af78e",
+
+  // Defense buildings
+  rl: "#5af78e",
+  waf: "#f0883e",
+  auth: "#57c7ff",
+  cb: "#f3f99d",
+
+  // Ore
+  ironOre: "#c87533",
+  copperOre: "#c87533",
+  oreBg: "#0e1a27",
+
+  // Attackers
+  attacker: "#ff4757",
+  enemyGlow: "rgba(255, 71, 87, 0.25)",
+  trail: "rgba(255, 71, 87, 0.4)",
+
+  // UI chrome
+  accent: "#5af78e",
+  panelBg: "#0b1622",
+  panelBorder: "#1a2a3a",
+  cellBg: "#0f1d2e",
+
+  // Text
+  text: "#c0c0c0",
+  textDim: "#888",
+  textMuted: "#555",
+
+  // States
+  critical: "#ff4757",
   warning: "#f59e0b",
-  critical: "#f43f5e",
+  empty: "#0e1a27",
+  emptyDot: "#1f3044",
+
+  // Legacy aliases kept for canvas backward compat
+  machine: "#57c7ff",
+  machineText: "#57c7ff",
+  defense: "#5af78e",
+  defenseText: "#5af78e",
+  machineActiveBg: "#0f1d2e",
+  circuit: "#5af78e",
   ironPlate: "#94a3b8",
-  copperPlate: "#b45309",
+  copperPlate: "#c87533",
   copperWire: "#d97706",
-  greenCircuit: "#34d399",
-  machineActiveBg: "#001a3d",
-  empty: "#001433",
-  emptyDot: "#1a2940",
+  greenCircuit: "#5af78e",
 } as const;
 
-// Building glyphs (UX spec section 1)
+// Per-type glyph colors used in the canvas and build panel
+export const BUILDING_COLORS: Record<string, string> = {
+  miner: "#57c7ff",
+  smelter: "#f3f99d",
+  assembler: "#ff6ac1",
+  belt: "#888",
+  rate_limiter: "#5af78e",
+  waf: "#f0883e",
+  auth_middleware: "#57c7ff",
+  circuit_breaker: "#f3f99d",
+};
+
+// Building glyphs
 export const BUILDING_GLYPHS: Record<string, string> = {
   miner: "M",
   smelter: "S",
@@ -52,13 +101,13 @@ export const BUILDING_GLYPHS: Record<string, string> = {
 };
 
 export const ITEM_COLORS: Record<string, string> = {
-  iron_ore: "#854d0e",
-  copper_ore: "#b45309",
+  iron_ore: "#c87533",
+  copper_ore: "#c87533",
   iron_plate: "#94a3b8",
-  copper_plate: "#b45309",
+  copper_plate: "#c87533",
   copper_wire: "#d97706",
-  green_circuit: "#34d399",
-  advanced_circuit: "#34d399",
+  green_circuit: "#5af78e",
+  advanced_circuit: "#5af78e",
 };
 
 // Build panel config
@@ -67,8 +116,8 @@ export const BUILDING_PANEL = [
   { key: "2", type: "smelter" as const, glyph: "S", name: "Smelter", category: "production" },
   { key: "3", type: "assembler" as const, glyph: "A", name: "Assembler", category: "production" },
   { key: "4", type: "belt" as const, glyph: "─", name: "Belt", category: "production" },
-  { key: "5", type: "rate_limiter" as const, glyph: "T", name: "Rate Limiter", category: "defense" },
+  { key: "5", type: "rate_limiter" as const, glyph: "T", name: "Rate Lim.", category: "defense" },
   { key: "6", type: "waf" as const, glyph: "W", name: "WAF", category: "defense" },
-  { key: "7", type: "auth_middleware" as const, glyph: "@", name: "Auth Middleware", category: "defense" },
-  { key: "8", type: "circuit_breaker" as const, glyph: "◆", name: "Circuit Breaker", category: "defense" },
+  { key: "7", type: "auth_middleware" as const, glyph: "@", name: "Auth MW", category: "defense" },
+  { key: "8", type: "circuit_breaker" as const, glyph: "◆", name: "Circuit Br.", category: "defense" },
 ] as const;

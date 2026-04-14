@@ -2,6 +2,8 @@
 import { useEffect, useState, useRef } from "react";
 import { useGameStore } from "@/stores/gameStore";
 
+const FONT = "Menlo, Monaco, 'Courier New', monospace";
+
 export function WaveAlert() {
   const { waveActive, waveNumber, waveAttackTypes } = useGameStore();
   const [visible, setVisible] = useState(false);
@@ -10,13 +12,11 @@ export function WaveAlert() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Show alert when a new wave starts
     if (waveActive && waveNumber !== prevWaveRef.current) {
       prevWaveRef.current = waveNumber;
       setFading(false);
       setVisible(true);
       if (timerRef.current) clearTimeout(timerRef.current);
-      // Fade after 3 seconds
       timerRef.current = setTimeout(() => {
         setFading(true);
         timerRef.current = setTimeout(() => setVisible(false), 500);
@@ -33,22 +33,36 @@ export function WaveAlert() {
     <div
       style={{
         position: "absolute",
-        top: 56, // below HUD
-        left: 0,
-        right: 0,
-        height: 40,
-        background: "rgba(244,63,94,0.9)",
+        top: 48,
+        left: 160,   // clear the build panel
+        right: 200,  // clear the metrics panel
+        padding: "6px 16px",
+        background: "rgba(11, 22, 34, 0.92)",
+        borderBottom: "1px solid #ff4757",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        gap: 12,
         zIndex: 100,
         opacity: fading ? 0 : 1,
         transition: fading ? "opacity 0.5s" : "none",
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: FONT,
       }}
     >
-      <span style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>
-        WAVE {waveNumber} INCOMING — {waveAttackTypes.map((t) => t.replace(/_/g, " ")).join(", ")}
+      <span
+        style={{
+          display: "inline-block",
+          width: 6,
+          height: 6,
+          borderRadius: "50%",
+          background: "#ff4757",
+        }}
+      />
+      <span style={{ fontSize: 12, fontWeight: "bold", color: "#ff4757", letterSpacing: "0.5px" }}>
+        WAVE {waveNumber} INCOMING
+      </span>
+      <span style={{ fontSize: 11, color: "#888" }}>
+        {waveAttackTypes.map((t) => t.replace(/_/g, " ")).join(", ")}
       </span>
     </div>
   );

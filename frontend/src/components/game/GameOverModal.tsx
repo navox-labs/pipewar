@@ -3,6 +3,8 @@ import { useGameStore } from "@/stores/gameStore";
 import { useRouter } from "next/navigation";
 import { deleteCurrentGame, createGame } from "@/lib/api";
 
+const FONT = "Menlo, Monaco, 'Courier New', monospace";
+
 export function GameOverModal() {
   const { gameOverResult, resetGame, setGameId } = useGameStore();
   const router = useRouter();
@@ -11,6 +13,7 @@ export function GameOverModal() {
 
   const { result, final_uptime, advanced_circuits, waves_survived } = gameOverResult;
   const won = result === "won";
+  const accentColor = won ? "#5af78e" : "#ff4757";
 
   const handlePlayAgain = async () => {
     resetGame();
@@ -35,40 +38,43 @@ export function GameOverModal() {
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(0,0,0,0.7)",
+        background: "rgba(0,0,0,0.75)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         zIndex: 999,
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: FONT,
       }}
     >
       <div
         style={{
-          width: 480,
-          background: "#001a3d",
-          border: `2px solid ${won ? "#34d399" : "#f43f5e"}`,
+          width: 440,
+          background: "#0d1926",
+          border: `2px solid ${accentColor}`,
           padding: 32,
+          borderRadius: 4,
         }}
       >
+        {/* Title */}
         <div
           style={{
             fontSize: 24,
-            fontWeight: 700,
-            color: won ? "#34d399" : "#f43f5e",
-            marginBottom: 8,
+            fontWeight: "bold",
+            color: accentColor,
+            marginBottom: 6,
+            letterSpacing: "0.05em",
           }}
         >
           {won ? "SYSTEM SECURED" : "SYSTEM COMPROMISED"}
         </div>
-        <div style={{ fontSize: 12, color: "#e0e0e0", marginBottom: 24 }}>
+        <div style={{ fontSize: 11, color: "#888", marginBottom: 24 }}>
           {won
             ? "20 Advanced Circuits produced"
             : "Uptime dropped below 95%"}
         </div>
 
         {/* Stats */}
-        <div style={{ borderTop: "1px solid #0a3d7a", paddingTop: 16, marginBottom: 24 }}>
+        <div style={{ borderTop: "1px solid #1a2a3a", paddingTop: 16, marginBottom: 24 }}>
           {[
             ["Uptime", `${final_uptime.toFixed(2)}%`],
             ["Circuits", `${advanced_circuits} / 20`],
@@ -80,49 +86,63 @@ export function GameOverModal() {
                 display: "flex",
                 justifyContent: "space-between",
                 marginBottom: 8,
-                fontSize: 13,
+                fontSize: 12,
               }}
             >
-              <span style={{ color: "#6b7280" }}>{label}</span>
+              <span style={{ color: "#888" }}>{label}</span>
               <span style={{ color: "#e0e0e0" }}>{value}</span>
             </div>
           ))}
         </div>
 
-        {/* Actions */}
+        {/* Play Again */}
         <button
           onClick={handlePlayAgain}
           style={{
             width: "100%",
-            height: 48,
-            background: "#1d4ed8",
-            border: "1px solid #0a3d7a",
-            color: "#fff",
-            fontSize: 16,
-            fontWeight: 700,
+            height: 44,
+            background: "transparent",
+            border: `1px solid ${accentColor}`,
+            color: accentColor,
+            fontSize: 13,
+            fontWeight: "bold",
             cursor: "pointer",
-            fontFamily: "'JetBrains Mono', monospace",
-            marginBottom: 12,
+            fontFamily: FONT,
+            marginBottom: 10,
+            letterSpacing: "0.05em",
+            borderRadius: 3,
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "#38bdf8";
+            const btn = e.currentTarget as HTMLButtonElement;
+            btn.style.background = accentColor;
+            btn.style.color = "#0b1622";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "#1d4ed8";
+            const btn = e.currentTarget as HTMLButtonElement;
+            btn.style.background = "transparent";
+            btn.style.color = accentColor;
           }}
         >
           PLAY AGAIN
         </button>
+
+        {/* Quit */}
         <div style={{ textAlign: "center" }}>
           <button
             onClick={handleQuit}
             style={{
               background: "transparent",
               border: "none",
-              color: "#6b7280",
-              fontSize: 14,
+              color: "#555",
+              fontSize: 11,
               cursor: "pointer",
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: FONT,
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.color = "#888";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.color = "#555";
             }}
           >
             QUIT
