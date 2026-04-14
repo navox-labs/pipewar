@@ -50,7 +50,7 @@ export function LandingPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#0b1622",
+        background: "#00214d",
         fontFamily: FONT,
       }}
     >
@@ -69,13 +69,13 @@ export function LandingPage() {
         </h1>
 
         {/* Tagline */}
-        <p style={{ fontSize: 13, color: "#888", margin: "0 0 8px" }}>
+        <p style={{ fontSize: 13, color: "#a0b0c0", margin: "0 0 8px" }}>
           Build. Produce. Defend.
         </p>
         <p
           style={{
             fontSize: 11,
-            color: "#555",
+            color: "#7090b0",
             margin: "0 0 32px",
             lineHeight: 1.7,
           }}
@@ -120,7 +120,7 @@ export function LandingPage() {
         <ResumeButton onResume={handleResume} />
 
         {/* Keyboard hint */}
-        <div style={{ marginTop: 40, fontSize: 9, color: "#333", lineHeight: 1.8 }}>
+        <div style={{ marginTop: 40, fontSize: 9, color: "#5a7a9a", lineHeight: 1.8 }}>
           1-4: production buildings &nbsp;|&nbsp; 5-8: defenses
           <br />
           R: rotate belt &nbsp;|&nbsp; Space: pause &nbsp;|&nbsp; Del: remove
@@ -148,7 +148,7 @@ function ResumeButton({ onResume }: { onResume: () => void }) {
         style={{
           background: "transparent",
           border: "none",
-          color: "#888",
+          color: "#a0b0c0",
           fontSize: 11,
           cursor: "pointer",
           fontFamily: FONT,

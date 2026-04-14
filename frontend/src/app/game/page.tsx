@@ -135,7 +135,7 @@ export default function GamePage() {
           alignItems: "center",
           justifyContent: "center",
           height: "100vh",
-          background: "#0b1622",
+          background: "#00214d",
           color: "#c0c0c0",
           fontFamily: "Menlo, Monaco, 'Courier New', monospace",
           textAlign: "center",
@@ -154,7 +154,7 @@ export default function GamePage() {
         display: "flex",
         flexDirection: "column",
         height: "100vh",
-        background: "#0b1622",
+        background: "#00214d",
         position: "relative",
         overflow: "hidden",
       }}
@@ -169,7 +169,7 @@ export default function GamePage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "#0b1622",
+            background: "#00214d",
           }}
         >
           {gameId ? (
@@ -177,7 +177,7 @@ export default function GamePage() {
           ) : (
             <div
               style={{
-                color: "#555",
+                color: "#6b7280",
                 fontFamily: "Menlo, Monaco, 'Courier New', monospace",
                 fontSize: 12,
               }}

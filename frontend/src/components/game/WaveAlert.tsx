@@ -61,7 +61,7 @@ export function WaveAlert() {
       <span style={{ fontSize: 12, fontWeight: "bold", color: "#ff4757", letterSpacing: "0.5px" }}>
         WAVE {waveNumber} INCOMING
       </span>
-      <span style={{ fontSize: 11, color: "#888" }}>
+      <span style={{ fontSize: 11, color: "#a0b0c0" }}>
         {waveAttackTypes.map((t) => t.replace(/_/g, " ")).join(", ")}
       </span>
     </div>

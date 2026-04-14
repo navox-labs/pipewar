@@ -19,7 +19,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        color: "#888",
+        color: "#a0b0c0",
         fontSize: 10,
         textTransform: "uppercase",
         letterSpacing: "1px",
@@ -61,8 +61,8 @@ export function MetricsPanel() {
     <div
       style={{
         width: 200,
-        background: "#0b1622",
-        borderLeft: "1px solid #1a2a3a",
+        background: "#00214d",
+        borderLeft: "1px solid #0a3d7a",
         padding: 12,
         display: "flex",
         flexDirection: "column",
@@ -77,7 +77,7 @@ export function MetricsPanel() {
       <div>
         <SectionTitle>Throughput</SectionTitle>
         {sortedMachines.length === 0 ? (
-          <div style={{ color: "#555", fontSize: 11 }}>No machines placed</div>
+          <div style={{ color: "#7090b0", fontSize: 11 }}>No machines placed</div>
         ) : (
           sortedMachines.slice(0, 6).map((m) => (
             <div
@@ -98,7 +98,7 @@ export function MetricsPanel() {
                 {m.pos[0]},{m.pos[1]}
                 {m.is_bottleneck ? " !" : ""}
               </span>
-              <span style={{ color: "#888", fontFamily: FONT }}>
+              <span style={{ color: "#a0b0c0", fontFamily: FONT }}>
                 {m.items_per_min.toFixed(0)}/min
               </span>
             </div>
@@ -135,7 +135,7 @@ export function MetricsPanel() {
                       flexShrink: 0,
                     }}
                   />
-                  <span style={{ color: "#888" }}>{t.replace(/_/g, " ")}</span>
+                  <span style={{ color: "#a0b0c0" }}>{t.replace(/_/g, " ")}</span>
                 </div>
               ))}
             </div>
@@ -151,7 +151,7 @@ export function MetricsPanel() {
       <div>
         <SectionTitle>Defenses</SectionTitle>
         {Object.keys(defenseGroups).length === 0 ? (
-          <div style={{ color: "#555", fontSize: 11 }}>No defenses placed</div>
+          <div style={{ color: "#7090b0", fontSize: 11 }}>No defenses placed</div>
         ) : (
           Object.entries(defenseGroups).map(([type, count]) => {
             const color = BUILDING_COLORS[type] ?? "#888";
@@ -169,14 +169,14 @@ export function MetricsPanel() {
       <div style={{ flex: 1, overflow: "hidden" }}>
         <SectionTitle>Log</SectionTitle>
         {events.length === 0 ? (
-          <div style={{ color: "#555", fontSize: 10 }}>No events yet</div>
+          <div style={{ color: "#7090b0", fontSize: 10 }}>No events yet</div>
         ) : (
           events.slice(-8).map((ev, i) => (
             <div
               key={i}
               style={{ marginBottom: 2, fontSize: 10, lineHeight: 1.4 }}
             >
-              <span style={{ color: "#555" }}>{ev.timestamp} </span>
+              <span style={{ color: "#7090b0" }}>{ev.timestamp} </span>
               <span style={{ color: eventColor(ev.eventType) }}>{ev.message}</span>
             </div>
           ))

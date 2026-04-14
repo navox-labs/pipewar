@@ -27,15 +27,15 @@ export function HUD({ onPause }: Props) {
         justifyContent: "space-between",
         alignItems: "center",
         padding: "8px 16px",
-        background: "#0b1622",
-        borderBottom: "1px solid #1a2a3a",
+        background: "#00214d",
+        borderBottom: "1px solid #0a3d7a",
         flexShrink: 0,
         fontFamily: FONT,
       }}
     >
       {/* Left: production status */}
       <div>
-        <div style={{ fontSize: 10, color: "#888", textTransform: "uppercase", letterSpacing: "1px" }}>
+        <div style={{ fontSize: 10, color: "#a0b0c0", textTransform: "uppercase", letterSpacing: "1px" }}>
           Production
         </div>
         <div style={{ fontSize: 12, color: "#c0c0c0" }}>
@@ -48,7 +48,7 @@ export function HUD({ onPause }: Props) {
         <div style={{ fontSize: 20, fontWeight: "bold", color: uptimeColor(uptimePct), lineHeight: 1.2 }}>
           {uptimePct.toFixed(2)}%
         </div>
-        <div style={{ fontSize: 11, color: "#888" }}>
+        <div style={{ fontSize: 11, color: "#a0b0c0" }}>
           UPTIME &middot; {advancedCircuits}/20 CIRCUITS
         </div>
       </div>
@@ -58,13 +58,13 @@ export function HUD({ onPause }: Props) {
         <div style={{ fontSize: 14, fontWeight: "bold", color: "#e0e0e0" }}>
           WAVE {currentWave}
           {waveActive && (
-            <span style={{ fontSize: 11, fontWeight: "normal", color: "#888" }}>
+            <span style={{ fontSize: 11, fontWeight: "normal", color: "#a0b0c0" }}>
               {" "}— {waveAttackerCount} attackers
             </span>
           )}
         </div>
         {waveActive ? (
-          <div style={{ fontSize: 11, color: "#888" }}>
+          <div style={{ fontSize: 11, color: "#a0b0c0" }}>
             {waveAttackTypes.map((t) => t.replace(/_/g, " ")).join(", ")}
           </div>
         ) : (

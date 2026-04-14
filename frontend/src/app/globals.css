@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-pw-bg: #0b1622;
-  --color-pw-grid-bg: #0e1a27;
-  --color-pw-panel-bg: #0b1622;
-  --color-pw-panel-border: #1a2a3a;
+  --color-pw-bg: #00214d;
+  --color-pw-grid-bg: #001433;
+  --color-pw-panel-bg: #001a3d;
+  --color-pw-panel-border: #0a3d7a;
   --color-pw-miner: #57c7ff;
   --color-pw-miner-border: #3a8abf;
   --color-pw-smelter: #f3f99d;
@@ -22,19 +22,19 @@
   --color-pw-trail: rgba(255, 71, 87, 0.4);
   --color-pw-warning: #f59e0b;
   --color-pw-critical: #ff4757;
-  --color-pw-text: #c0c0c0;
-  --color-pw-text-dim: #888;
-  --color-pw-text-muted: #555;
+  --color-pw-text: #e0e0e0;
+  --color-pw-text-dim: #a0b0c0;
+  --color-pw-text-muted: #7dd3fc;
   --color-pw-iron-ore: #c87533;
   --color-pw-copper-ore: #c87533;
-  --color-pw-grid-dot: #1f3044;
-  --color-pw-grid-line: #121e2c;
+  --color-pw-grid-dot: #0a2a4a;
+  --color-pw-grid-line: #0a1f3d;
   --font-mono: Menlo, Monaco, 'Courier New', monospace;
 }
 
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0; height: 100%;
-  background-color: #0b1622; color: #c0c0c0;
+  background-color: #00214d; color: #e0e0e0;
   font-family: Menlo, Monaco, 'Courier New', monospace; font-size: 11px;
 }

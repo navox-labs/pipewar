@@ -158,7 +158,7 @@ export function GameCanvas({ onCellClick, onCellHover }: Props) {
       const health = b.health ?? 100;
       if (health < 100) {
         const barY = py + CELL_SIZE - 3;
-        ctx.fillStyle = "#1a2a3a";
+        ctx.fillStyle = "#0a3d7a";
         ctx.fillRect(px, barY, CELL_SIZE, 3);
         const pct = health / 100;
         ctx.fillStyle = pct > 0.5 ? COLORS.accent : pct > 0.25 ? COLORS.warning : COLORS.critical;
@@ -272,7 +272,7 @@ export function GameCanvas({ onCellClick, onCellHover }: Props) {
       // Health bar
       if (health < 100) {
         const barY = py + CELL_SIZE - 3;
-        ctx.fillStyle = "#1a2a3a";
+        ctx.fillStyle = "#0a3d7a";
         ctx.fillRect(px, barY, CELL_SIZE, 3);
         const pct = health / 100;
         ctx.fillStyle = pct > 0.5 ? COLORS.accent : pct > 0.25 ? COLORS.warning : COLORS.critical;

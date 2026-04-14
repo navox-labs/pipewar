@@ -184,7 +184,7 @@ export function TutorialOverlay() {
           transform: "translate(-50%, -50%)",
           zIndex: 900,
           width: 500,
-          background: "#0d1926",
+          background: "#001a3d",
           border: "1px solid #1a2a3a",
           padding: "28px 32px",
           fontFamily: FONT,
@@ -201,7 +201,7 @@ export function TutorialOverlay() {
                 width: 7,
                 height: 7,
                 borderRadius: "50%",
-                background: i === step ? "#5af78e" : "#1a2a3a",
+                background: i === step ? "#5af78e" : "#0a3d7a",
                 transition: "background 0.2s",
               }}
             />
@@ -250,7 +250,7 @@ export function TutorialOverlay() {
             style={{
               background: "transparent",
               border: "none",
-              color: "#555",
+              color: "#7090b0",
               fontSize: 11,
               cursor: "pointer",
               fontFamily: FONT,

@@ -49,7 +49,7 @@ export function GameOverModal() {
       <div
         style={{
           width: 440,
-          background: "#0d1926",
+          background: "#001a3d",
           border: `2px solid ${accentColor}`,
           padding: 32,
           borderRadius: 4,
@@ -67,14 +67,14 @@ export function GameOverModal() {
         >
           {won ? "SYSTEM SECURED" : "SYSTEM COMPROMISED"}
         </div>
-        <div style={{ fontSize: 11, color: "#888", marginBottom: 24 }}>
+        <div style={{ fontSize: 11, color: "#a0b0c0", marginBottom: 24 }}>
           {won
             ? "20 Advanced Circuits produced"
             : "Uptime dropped below 95%"}
         </div>
 
         {/* Stats */}
-        <div style={{ borderTop: "1px solid #1a2a3a", paddingTop: 16, marginBottom: 24 }}>
+        <div style={{ borderTop: "1px solid #0a3d7a", paddingTop: 16, marginBottom: 24 }}>
           {[
             ["Uptime", `${final_uptime.toFixed(2)}%`],
             ["Circuits", `${advanced_circuits} / 20`],
@@ -89,7 +89,7 @@ export function GameOverModal() {
                 fontSize: 12,
               }}
             >
-              <span style={{ color: "#888" }}>{label}</span>
+              <span style={{ color: "#a0b0c0" }}>{label}</span>
               <span style={{ color: "#e0e0e0" }}>{value}</span>
             </div>
           ))}
@@ -115,7 +115,7 @@ export function GameOverModal() {
           onMouseEnter={(e) => {
             const btn = e.currentTarget as HTMLButtonElement;
             btn.style.background = accentColor;
-            btn.style.color = "#0b1622";
+            btn.style.color = "#00214d";
           }}
           onMouseLeave={(e) => {
             const btn = e.currentTarget as HTMLButtonElement;
@@ -133,7 +133,7 @@ export function GameOverModal() {
             style={{
               background: "transparent",
               border: "none",
-              color: "#555",
+              color: "#7090b0",
               fontSize: 11,
               cursor: "pointer",
               fontFamily: FONT,

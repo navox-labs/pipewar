@@ -10,9 +10,9 @@ export const WS_BASE = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000";
 // Color palette — scene3 dark navy palette (also used for canvas rendering)
 export const COLORS = {
   // Canvas background
-  gridBg: "#0e1a27",
-  gridDot: "#1f3044",
-  gridLine: "#121e2c",
+  gridBg: "#001433",
+  gridDot: "#0a2a4a",
+  gridLine: "#0a1f3d",
 
   // Production buildings
   miner: "#57c7ff",
@@ -35,7 +35,7 @@ export const COLORS = {
   // Ore
   ironOre: "#c87533",
   copperOre: "#c87533",
-  oreBg: "#0e1a27",
+  oreBg: "#0f0a02",
 
   // Attackers
   attacker: "#ff4757",
@@ -44,27 +44,27 @@ export const COLORS = {
 
   // UI chrome
   accent: "#5af78e",
-  panelBg: "#0b1622",
-  panelBorder: "#1a2a3a",
-  cellBg: "#0f1d2e",
+  panelBg: "#001a3d",
+  panelBorder: "#0a3d7a",
+  cellBg: "#001433",
 
   // Text
-  text: "#c0c0c0",
-  textDim: "#888",
-  textMuted: "#555",
+  text: "#e0e0e0",
+  textDim: "#a0b0c0",
+  textMuted: "#7dd3fc",
 
   // States
   critical: "#ff4757",
   warning: "#f59e0b",
-  empty: "#0e1a27",
-  emptyDot: "#1f3044",
+  empty: "#001433",
+  emptyDot: "#0a2a4a",
 
   // Legacy aliases kept for canvas backward compat
   machine: "#57c7ff",
   machineText: "#57c7ff",
   defense: "#5af78e",
   defenseText: "#5af78e",
-  machineActiveBg: "#0f1d2e",
+  machineActiveBg: "#001a3d",
   circuit: "#5af78e",
   ironPlate: "#94a3b8",
   copperPlate: "#c87533",
