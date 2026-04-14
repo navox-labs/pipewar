@@ -25,10 +25,18 @@ interface Props {
   onCellHover: (x: number, y: number) => void;
 }
 
+interface Projectile {
+  sx: number; sy: number;
+  tx: number; ty: number;
+  progress: number;
+  color: string;
+}
+
 export function GameCanvas({ onCellClick, onCellHover }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameRef = useRef<number>(0);
   const frameCountRef = useRef<number>(0);
+  const projectilesRef = useRef<Projectile[]>([]);
   const store = useGameStore();
 
   // Read store state inside render loop via refs to avoid re-subscribing
@@ -166,20 +174,50 @@ export function GameCanvas({ onCellClick, onCellHover }: Props) {
       }
     }
 
-    // 7. Belts — thin center line
+    // 7. Belts — visible track with border and direction arrow
     for (const [key, b] of Object.entries(grid.buildings)) {
       if (b.type !== "belt") continue;
       const [cx, cy] = key.split(",").map(Number);
       const px = cx * CELL_SIZE;
       const py = cy * CELL_SIZE;
-      // Belt track fill
-      ctx.fillStyle = COLORS.belt;
-      ctx.globalAlpha = 0.4;
-      if (b.direction === "east" || b.direction === "west") {
-        ctx.fillRect(px + 4, py + CELL_SIZE / 2 - 4, CELL_SIZE - 8, 8);
+      const isHoriz = b.direction === "east" || b.direction === "west";
+
+      // Belt track background
+      ctx.fillStyle = "#1a3050";
+      ctx.globalAlpha = 0.7;
+      if (isHoriz) {
+        ctx.fillRect(px + 1, py + CELL_SIZE / 2 - 5, CELL_SIZE - 2, 10);
       } else {
-        ctx.fillRect(px + CELL_SIZE / 2 - 4, py + 4, 8, CELL_SIZE - 8);
+        ctx.fillRect(px + CELL_SIZE / 2 - 5, py + 1, 10, CELL_SIZE - 2);
       }
+      ctx.globalAlpha = 1;
+
+      // Belt border
+      ctx.strokeStyle = "#2a4a6a";
+      ctx.lineWidth = 1;
+      if (isHoriz) {
+        ctx.strokeRect(px + 1, py + CELL_SIZE / 2 - 5, CELL_SIZE - 2, 10);
+      } else {
+        ctx.strokeRect(px + CELL_SIZE / 2 - 5, py + 1, 10, CELL_SIZE - 2);
+      }
+
+      // Direction arrow (animated dash pattern)
+      const dashOffset = (fc * 0.5) % CELL_SIZE;
+      ctx.strokeStyle = COLORS.accent;
+      ctx.globalAlpha = 0.4;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 5]);
+      ctx.lineDashOffset = b.direction === "east" || b.direction === "south" ? -dashOffset : dashOffset;
+      ctx.beginPath();
+      if (isHoriz) {
+        ctx.moveTo(px, py + CELL_SIZE / 2);
+        ctx.lineTo(px + CELL_SIZE, py + CELL_SIZE / 2);
+      } else {
+        ctx.moveTo(px + CELL_SIZE / 2, py);
+        ctx.lineTo(px + CELL_SIZE / 2, py + CELL_SIZE);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
       ctx.globalAlpha = 1;
     }
 
@@ -318,7 +356,57 @@ export function GameCanvas({ onCellClick, onCellHover }: Props) {
       ctx.globalAlpha = 1;
     }
 
-    // 11. Hover preview
+    // 11. Defense projectiles — colored bullets from defenses to nearby attackers
+    const projectiles = projectilesRef.current;
+
+    // Spawn new projectiles every ~45 frames (matching scene3)
+    if (fc % 45 === 0 && attackers.length > 0) {
+      for (const [key, b] of Object.entries(grid.defenses)) {
+        const [dx, dy] = key.split(",").map(Number);
+        const defCx = dx * CELL_SIZE + CELL_SIZE / 2;
+        const defCy = dy * CELL_SIZE + CELL_SIZE / 2;
+        const range = CELL_SIZE * 2.5;
+        const color = BUILDING_COLORS[b.type] ?? COLORS.accent;
+
+        for (const att of attackers) {
+          const ax = att.x * CELL_SIZE + CELL_SIZE / 2;
+          const ay = att.y * CELL_SIZE + CELL_SIZE / 2;
+          const dist = Math.sqrt((ax - defCx) ** 2 + (ay - defCy) ** 2);
+          if (dist < range) {
+            projectiles.push({ sx: defCx, sy: defCy, tx: ax, ty: ay, progress: 0, color });
+            break; // one projectile per defense per volley
+          }
+        }
+      }
+    }
+
+    // Update and draw projectiles
+    for (let i = projectiles.length - 1; i >= 0; i--) {
+      const p = projectiles[i];
+      p.progress += 0.06;
+      if (p.progress >= 1) {
+        projectiles.splice(i, 1);
+        continue;
+      }
+      const bx = p.sx + (p.tx - p.sx) * p.progress;
+      const by = p.sy + (p.ty - p.sy) * p.progress;
+      // Bullet
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = 1 - p.progress * 0.6;
+      ctx.beginPath();
+      ctx.arc(bx, by, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      // Trail behind bullet
+      ctx.globalAlpha = 0.2;
+      const trailX = p.sx + (p.tx - p.sx) * Math.max(0, p.progress - 0.1);
+      const trailY = p.sy + (p.ty - p.sy) * Math.max(0, p.progress - 0.1);
+      ctx.beginPath();
+      ctx.arc(trailX, trailY, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // 12. Hover preview
     if (s.selectedBuilding && s.hoveredCell) {
       const { x: hx, y: hy } = s.hoveredCell;
       const isDefense = DEFENSE_TYPES.has(s.selectedBuilding);
