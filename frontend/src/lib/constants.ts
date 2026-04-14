@@ -3,12 +3,10 @@ export const GRID_SIZE = 20;
 export const CELL_SIZE = 32; // pixels
 export const CANVAS_SIZE = GRID_SIZE * CELL_SIZE; // 640
 
-// Backend URLs — all traffic goes through Vercel rewrites (same-origin cookies).
-// In dev, point directly at localhost backend.
-const IS_BROWSER = typeof window !== "undefined";
-const ORIGIN = IS_BROWSER ? window.location.origin : "";
+// REST goes through Vercel rewrites (same-origin cookies).
+// WebSocket connects directly to Fly.io (Vercel can't proxy WS).
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
-export const WS_BASE = process.env.NEXT_PUBLIC_WS_URL || (IS_BROWSER ? ORIGIN.replace(/^http/, "ws") : "ws://localhost:8000");
+export const WS_BASE = process.env.NEXT_PUBLIC_WS_URL || "wss://pipewar-backend.fly.dev";
 
 // Color palette — scene3 dark navy palette (also used for canvas rendering)
 export const COLORS = {
