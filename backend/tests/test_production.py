@@ -146,7 +146,8 @@ def test_push_outputs_miner_no_push_when_belt_full():
     assert miner.output_buffer.get("iron_ore", 0) == 1
 
 
-def test_push_outputs_noop_for_non_miner():
+def test_push_outputs_works_for_smelter():
+    """All production types can push output onto adjacent belts."""
     grid = make_grid()
     smelter = Building(type=BuildingType.SMELTER, direction=Direction.EAST)
     smelter.output_buffer["iron_plate"] = 1
@@ -154,7 +155,9 @@ def test_push_outputs_noop_for_non_miner():
     belt = Building(type=BuildingType.BELT, direction=Direction.EAST)
     grid[(6, 5)].building = belt
     _push_outputs(grid[(5, 5)], grid)
-    assert len(belt.belt_items) == 0
+    assert len(belt.belt_items) == 1
+    assert belt.belt_items[0].item_type == ItemType.IRON_PLATE
+    assert smelter.output_buffer.get("iron_plate", 0) == 0
 
 
 def test_pull_inputs_checks_all_four_neighbours():

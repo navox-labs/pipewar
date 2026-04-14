@@ -143,6 +143,9 @@ def _pull_inputs(cell: Cell, cells: dict[tuple[int, int], Cell]):
     For simplicity: any adjacent cell with compatible output can feed this machine.
     """
     b = cell.building
+    # Miners produce from resource tiles, they never need to pull inputs
+    if b.type == BuildingType.MINER:
+        return
     total_input = sum(
         v for k, v in b.input_buffer.items()
         if not k.startswith("__")
@@ -176,9 +179,9 @@ def _pull_inputs(cell: Cell, cells: dict[tuple[int, int], Cell]):
 
 
 def _push_outputs(cell: Cell, cells: dict[tuple[int, int], Cell]):
-    """Push items from miner output_buffer onto the adjacent belt or machine in the miner's facing direction."""
+    """Push items from output_buffer onto the adjacent belt or machine in the building's facing direction."""
     b = cell.building
-    if b.type != BuildingType.MINER:
+    if b.type not in PRODUCTION_TYPES:
         return
     if not b.output_buffer:
         return

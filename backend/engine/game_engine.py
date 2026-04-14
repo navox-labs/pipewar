@@ -268,8 +268,7 @@ class GameEngine:
         for pos, cell in self.grid.items():
             if cell.building and cell.building.type in PRODUCTION_TYPES:
                 total += tick_machine(cell, self.grid)
-                if cell.building.type == BuildingType.MINER:
-                    _push_outputs(cell, self.grid)
+                _push_outputs(cell, self.grid)
         return total
 
     def _tick_wave_spawner(self):
