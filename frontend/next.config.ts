@@ -1,6 +1,17 @@
 import type { NextConfig } from "next";
 
+const BACKEND_URL = process.env.BACKEND_URL || "https://pipewar-backend.fly.dev";
+
 const nextConfig: NextConfig = {
+  // Proxy /api/* to the backend so cookies are same-origin
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${BACKEND_URL}/api/:path*`,
+      },
+    ];
+  },
   // C-10: Security headers on all frontend responses
   async headers() {
     return [
