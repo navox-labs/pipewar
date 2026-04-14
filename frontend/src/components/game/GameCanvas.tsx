@@ -475,8 +475,11 @@ export function GameCanvas({ onCellClick, onCellHover }: Props) {
         handleClick(e as unknown as React.MouseEvent<HTMLCanvasElement>);
       }}
       onMouseLeave={() => storeRef.current.setHoveredCell(null)}
-      className="block border border-pw-canvas-border"
-      style={{ cursor: store.selectedBuilding ? "crosshair" : "default" }}
+      style={{
+        display: "block",
+        cursor: store.selectedBuilding ? "crosshair" : "default",
+        border: "1px solid #1a2a3a",
+      }}
     />
   );
 }
