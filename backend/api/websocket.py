@@ -89,8 +89,12 @@ async def websocket_endpoint(websocket: WebSocket, game_id: str):
         await websocket.close(code=1013)  # Try again later
         return
 
-    # --- C-03: validate session cookie ---
+    # --- C-03: validate session ---
+    # Try cookie first, fall back to query param (needed when REST goes
+    # through Vercel proxy but WS connects directly to Fly.io)
     session_id = websocket.cookies.get(COOKIE_NAME)
+    if not session_id:
+        session_id = websocket.query_params.get("session")
     if not session_id:
         await websocket.close(code=4001)
         return

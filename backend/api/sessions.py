@@ -57,7 +57,7 @@ async def create_session_endpoint(
             expires = (
                 datetime.now(timezone.utc) + timedelta(days=SESSION_TTL_DAYS)
             ).isoformat()
-            return {"expires_at": expires, "has_active_game": active}
+            return {"expires_at": expires, "has_active_game": active, "ws_token": existing_session_id}
 
     session_id = await create_session()
     expires_at = (
@@ -75,8 +75,9 @@ async def create_session_endpoint(
         path="/",
     )
 
-    # C-05: response body contains only non-sensitive info
-    return {"expires_at": expires_at, "has_active_game": False}
+    # ws_token allows the frontend to authenticate WebSocket connections
+    # directly to Fly.io when REST goes through Vercel proxy
+    return {"expires_at": expires_at, "has_active_game": False, "ws_token": session_id}
 
 
 @router.get("/sessions/me")

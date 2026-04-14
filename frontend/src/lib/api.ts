@@ -1,6 +1,10 @@
 // REST API client
 import { API_BASE } from "./constants";
 
+// Store ws_token for WebSocket auth (WS goes directly to Fly.io, not through Vercel proxy)
+let _wsToken: string | null = null;
+export function getWsToken(): string | null { return _wsToken; }
+
 export async function createSession(): Promise<{ expires_at: string; has_active_game: boolean }> {
   const res = await fetch(`${API_BASE}/api/sessions`, {
     method: "POST",
@@ -8,7 +12,9 @@ export async function createSession(): Promise<{ expires_at: string; has_active_
     headers: { "Content-Type": "application/json" },
   });
   if (!res.ok) throw new Error(`Session creation failed: ${res.status}`);
-  return res.json();
+  const data = await res.json();
+  if (data.ws_token) _wsToken = data.ws_token;
+  return data;
 }
 
 export async function getSessionMe(): Promise<{ has_active_game: boolean }> {

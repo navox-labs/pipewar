@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useCallback } from "react";
 import { WS_BASE } from "@/lib/constants";
+import { getWsToken } from "@/lib/api";
 import { useGameStore } from "@/stores/gameStore";
 import type { ServerMessage } from "@/lib/types";
 
@@ -17,7 +18,10 @@ export function useWebSocket(gameId: string | null) {
     if (!gameId) return;
     if (ws.current?.readyState === WebSocket.OPEN) return;
 
-    const url = `${WS_BASE}/api/games/${gameId}/ws`;
+    // Pass session token as query param for WS auth (cookie is on Vercel domain)
+    const token = getWsToken();
+    const params = token ? `?session=${encodeURIComponent(token)}` : "";
+    const url = `${WS_BASE}/api/games/${gameId}/ws${params}`;
     const socket = new WebSocket(url);
     ws.current = socket;
 
