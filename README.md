@@ -21,7 +21,7 @@ No install. No account. Click and play.
 
 ## What is PipeWar?
 
-PipeWar is a browser-based tower defense game inspired by [Factorio](https://factorio.com)'s production chain mechanics, themed around cybersecurity.
+PipeWar is a browser-based tower defense game inspired by [Factorio](https://en.wikipedia.org/wiki/Factorio)'s production chain mechanics, themed around cybersecurity.
 
 You build a factory on a 20x20 grid: mine ore, smelt it into plates, assemble plates into circuits. Connect everything with conveyor belts. The production chain is the core — raw resources in, Advanced Circuits out.
 
