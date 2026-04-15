@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIPEWAR Demo — Scene 3: Wave Attack</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0b1622;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    overflow: hidden;
+    color: #c0c0c0;
+  }
+
+  /* Top bar */
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: #0b1622;
+    border-bottom: 1px solid #1a2a3a;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .top-bar.visible { opacity: 1; }
+
+  .top-left {
+    color: #888;
+  }
+
+  .top-left span { color: #5af78e; }
+
+  .top-center {
+    text-align: center;
+  }
+
+  .uptime-value {
+    color: #5af78e;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .uptime-label {
+    color: #888;
+    font-size: 11px;
+  }
+
+  .top-right {
+    text-align: right;
+  }
+
+  .wave-label {
+    color: #e0e0e0;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .wave-sub {
+    color: #888;
+    font-size: 11px;
+  }
+
+  .pause-btn {
+    display: inline-block;
+    padding: 2px 10px;
+    border: 1px solid #5af78e;
+    color: #5af78e;
+    font-size: 11px;
+    border-radius: 3px;
+    margin-left: 16px;
+  }
+
+  /* Main layout */
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* Left sidebar — Build menu */
+  .sidebar-left {
+    width: 160px;
+    padding: 12px;
+    background: #0b1622;
+    border-right: 1px solid #1a2a3a;
+    font-size: 11px;
+    opacity: 0;
+    transition: opacity 0.4s;
+    overflow: hidden;
+  }
+
+  .sidebar-left.visible { opacity: 1; }
+
+  .section-title {
+    color: #888;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    margin-top: 12px;
+  }
+
+  .section-title:first-child { margin-top: 0; }
+
+  .build-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+
+  .build-item {
+    background: #0f1d2e;
+    border: 1px solid #1a2a3a;
+    padding: 6px 4px;
+    text-align: center;
+    border-radius: 3px;
+    font-size: 10px;
+    color: #aaa;
+  }
+
+  .build-item .key {
+    color: #888;
+    font-size: 9px;
+    display: block;
+  }
+
+  .build-item .icon {
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .build-item .icon.miner { color: #57c7ff; }
+  .build-item .icon.smelter { color: #f3f99d; }
+  .build-item .icon.assembler { color: #ff6ac1; }
+  .build-item .icon.belt { color: #888; }
+  .build-item .icon.rl { color: #5af78e; }
+  .build-item .icon.waf { color: #f0883e; }
+  .build-item .icon.auth { color: #57c7ff; }
+  .build-item .icon.cb { color: #f3f99d; }
+
+  .build-item.selected {
+    border-color: #57c7ff;
+    background: #122238;
+  }
+
+  /* Chain info at bottom of left sidebar */
+  .chain-info {
+    margin-top: 16px;
+    font-size: 10px;
+    line-height: 1.6;
+  }
+
+  .chain-title {
+    color: #888;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .chain-line {
+    color: #777;
+  }
+
+  .chain-highlight {
+    color: #5af78e;
+    font-weight: bold;
+  }
+
+  .controls-hint {
+    margin-top: 12px;
+    font-size: 9px;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  /* Game canvas area */
+  .game-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0b1622;
+    position: relative;
+  }
+
+  canvas {
+    border: 1px solid #1a2a3a;
+  }
+
+  /* Right sidebar — HUD */
+  .sidebar-right {
+    width: 200px;
+    padding: 12px;
+    background: #0b1622;
+    border-left: 1px solid #1a2a3a;
+    font-size: 11px;
+    opacity: 0;
+    transition: opacity 0.4s;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .sidebar-right.visible { opacity: 1; }
+
+  .hud-section-title {
+    color: #888;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .throughput-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px;
+    font-size: 11px;
+  }
+
+  .tp-coords { color: #aaa; }
+  .tp-rate { color: #888; }
+  .tp-active { color: #5af78e; }
+
+  .wave-info {
+    font-size: 12px;
+  }
+
+  .wave-info .wave-num {
+    color: #e0e0e0;
+    font-weight: bold;
+  }
+
+  .wave-info .attacker-count {
+    color: #ff6b6b;
+    font-weight: bold;
+  }
+
+  .wave-info .enemy-type {
+    font-size: 11px;
+    margin-top: 4px;
+  }
+
+  .wave-info .enemy-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ff6b6b;
+    margin-right: 4px;
+  }
+
+  .defense-list {
+    color: #888;
+    font-size: 11px;
+  }
+
+  .log-section {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .log-entry {
+    font-size: 10px;
+    margin-bottom: 2px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    line-height: 1.4;
+  }
+
+  .log-entry.visible { opacity: 1; }
+  .log-time { color: #555; }
+  .log-red { color: #ff6b6b; }
+  .log-green { color: #5af78e; }
+  .log-yellow { color: #f3f99d; }
+  .log-white { color: #ddd; }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar" id="topBar">
+  <div class="top-left">
+    <div style="font-size:10px;text-transform:uppercase;color:#888;letter-spacing:1px;">Production</div>
+    <div>Traffic: <span>18.4</span> items/min</div>
+  </div>
+  <div class="top-center">
+    <div class="uptime-value" id="uptimeVal">99.97%</div>
+    <div class="uptime-label">UPTIME · 6/20 CIRCUITS</div>
+  </div>
+  <div class="top-right">
+    <span class="wave-label" id="waveLabel">WAVE 1</span> <span class="wave-sub">— 12 attackers</span>
+    <div class="wave-sub" id="waveSub">ddos_bot</div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <!-- Left Sidebar -->
+  <div class="sidebar-left" id="sidebarLeft">
+    <div class="section-title">Build</div>
+    <div class="section-title" style="margin-top:8px">Production</div>
+    <div class="build-grid">
+      <div class="build-item"><span class="icon miner">M</span><span class="key">[1]</span>Miner</div>
+      <div class="build-item"><span class="icon smelter">S</span><span class="key">[2]</span>Smelter</div>
+      <div class="build-item"><span class="icon assembler">A</span><span class="key">[3]</span>Assemb...</div>
+      <div class="build-item selected"><span class="icon belt">—</span><span class="key">[4]</span>Belt</div>
+    </div>
+    <div class="section-title">Defense</div>
+    <div class="build-grid">
+      <div class="build-item"><span class="icon rl">T</span><span class="key">[5]</span>Rate L...</div>
+      <div class="build-item"><span class="icon waf">W</span><span class="key">[6]</span>WAF</div>
+      <div class="build-item"><span class="icon auth">@</span><span class="key">[7]</span>Auth M...</div>
+      <div class="build-item"><span class="icon cb">◆</span><span class="key">[8]</span>Circui...</div>
+    </div>
+    <div class="chain-info">
+      <div class="chain-title">Chain</div>
+      <div class="chain-line">Iron Ore → Smelter → Iron Plate</div>
+      <div class="chain-line">Copper Ore → Smelter → Copper Plate</div>
+      <div class="chain-line">Copper Plate → Assembler → Wire</div>
+      <div class="chain-line">Iron Plate + Wire → Green Circuit</div>
+      <div class="chain-highlight">Green Circuit → ADVANCED</div>
+    </div>
+    <div class="controls-hint">
+      1-4: prod | 5-8: defense<br>
+      R: rotate | Esc: deselect<br>
+      Space: pause | Del: remove
+    </div>
+  </div>
+
+  <!-- Canvas -->
+  <div class="game-area">
+    <canvas id="gameCanvas" width="560" height="560"></canvas>
+  </div>
+
+  <!-- Right Sidebar -->
+  <div class="sidebar-right" id="sidebarRight">
+    <div>
+      <div class="hud-section-title">Throughput</div>
+      <div class="throughput-row"><span class="tp-coords tp-active">0,5</span> <span class="tp-coords tp-active">▲</span> <span class="tp-rate tp-active">4/min</span></div>
+      <div class="throughput-row"><span class="tp-coords">0,14</span> <span class="tp-rate">3/min</span></div>
+      <div class="throughput-row"><span class="tp-coords">2,5</span> <span class="tp-rate">2/min</span></div>
+      <div class="throughput-row"><span class="tp-coords">5,5</span> <span class="tp-rate">2/min</span></div>
+    </div>
+
+    <div>
+      <div class="hud-section-title">Waves</div>
+      <div class="wave-info">
+        <div><span class="wave-num">Wave 1</span></div>
+        <div class="attacker-count" id="attackerCount">12 attackers</div>
+        <div class="enemy-type"><span class="enemy-dot"></span> ddos_bot</div>
+        <div class="enemy-type"><span class="enemy-dot" style="background:#ff9500"></span> sql_inject</div>
+        <div class="enemy-type"><span class="enemy-dot" style="background:#ff6ac1"></span> cred_stuffer</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="hud-section-title">Defenses</div>
+      <div class="defense-list" id="defenseList">No defenses placed</div>
+    </div>
+
+    <div class="log-section">
+      <div class="hud-section-title">Log</div>
+      <div id="logPanel"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const GRID = 20;
+const CELL = canvas.width / GRID; // 28
+
+// Match the real game's dark teal palette
+const C = {
+  bg: '#0e1a27',
+  gridDot: '#1f3044',
+  gridLine: '#121e2c',
+  iron: '#c87533',
+  copper: '#c87533',
+  miner: '#57c7ff',
+  minerBorder: '#3a8abf',
+  smelter: '#f3f99d',
+  smelterBorder: '#b3b56a',
+  assembler: '#ff6ac1',
+  assemblerBorder: '#b34a88',
+  belt: '#4a5568',
+  beltItem: '#5af78e',
+  rl: '#5af78e',
+  waf: '#f0883e',
+  auth: '#57c7ff',
+  cb: '#f3f99d',
+  enemy: '#ff4757',
+  enemyGlow: 'rgba(255, 71, 87, 0.25)',
+};
+
+// Pre-placed buildings matching the real game layout
+const buildings = [
+  // Iron ore patches (left edge, top area)
+  { x: 0, y: 4, type: 'ore' },
+  { x: 0, y: 5, type: 'ore' },
+  // Copper ore patches (left edge, middle)
+  { x: 0, y: 10, type: 'ore' },
+  { x: 0, y: 11, type: 'ore' },
+  // More ore (left edge, bottom)
+  { x: 0, y: 16, type: 'ore' },
+  { x: 0, y: 17, type: 'ore' },
+
+  // Miners on ore
+  { x: 1, y: 4, type: 'miner', label: 'M' },
+  { x: 1, y: 10, type: 'miner', label: 'M' },
+  { x: 1, y: 16, type: 'miner', label: 'M' },
+
+  // Belts from miners
+  { x: 2, y: 4, type: 'belt' }, { x: 3, y: 4, type: 'belt' },
+  { x: 2, y: 10, type: 'belt' }, { x: 3, y: 10, type: 'belt' },
+
+  // Smelters
+  { x: 4, y: 4, type: 'smelter', label: 'S' },
+  { x: 4, y: 10, type: 'smelter', label: 'S' },
+
+  // Belts to assemblers
+  { x: 5, y: 4, type: 'belt' }, { x: 5, y: 5, type: 'belt' }, { x: 5, y: 6, type: 'belt' }, { x: 5, y: 7, type: 'belt' },
+  { x: 5, y: 10, type: 'belt' }, { x: 5, y: 9, type: 'belt' }, { x: 5, y: 8, type: 'belt' },
+
+  // Assemblers
+  { x: 6, y: 7, type: 'assembler', label: 'A' },
+  { x: 8, y: 7, type: 'assembler', label: 'A' },
+  { x: 7, y: 7, type: 'belt' },
+
+  // Defenses (placed after wave starts)
+  { x: 10, y: 5, type: 'rl', label: 'T', defense: true },
+  { x: 10, y: 9, type: 'waf', label: 'W', defense: true },
+  { x: 12, y: 7, type: 'auth', label: '@', defense: true },
+  { x: 14, y: 5, type: 'cb', label: '◆', defense: true },
+  { x: 14, y: 9, type: 'rl', label: 'T', defense: true },
+];
+
+// Enemies
+const enemies = [];
+const ENEMY_TYPES = [
+  { name: 'ddos_bot', color: '#ff4757', count: 5, speed: 0.012 },
+  { name: 'sql_inject', color: '#ff9500', count: 4, speed: 0.009 },
+  { name: 'cred_stuffer', color: '#ff6ac1', count: 3, speed: 0.014 },
+];
+
+const projectiles = [];
+let frame = 0;
+let enemiesSpawned = false;
+let defensesPlaced = false;
+
+function drawGrid() {
+  ctx.fillStyle = C.bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Draw grid dots at intersections (matching real game)
+  ctx.fillStyle = C.gridDot;
+  for (let x = 0; x <= GRID; x++) {
+    for (let y = 0; y <= GRID; y++) {
+      ctx.beginPath();
+      ctx.arc(x * CELL, y * CELL, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Subtle grid lines
+  ctx.strokeStyle = C.gridLine;
+  ctx.lineWidth = 0.3;
+  for (let i = 0; i <= GRID; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i * CELL, 0);
+    ctx.lineTo(i * CELL, canvas.height);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0, i * CELL);
+    ctx.lineTo(canvas.width, i * CELL);
+    ctx.stroke();
+  }
+}
+
+function drawBuilding(b) {
+  const x = b.x * CELL;
+  const y = b.y * CELL;
+
+  if (b.defense && !defensesPlaced) return;
+
+  switch (b.type) {
+    case 'ore':
+      // Orange ore tile matching real game
+      ctx.fillStyle = C.iron;
+      ctx.globalAlpha = 0.5;
+      ctx.fillRect(x + 2, y + 2, CELL - 4, CELL - 4);
+      ctx.globalAlpha = 1;
+      // Small cross pattern like real ore
+      ctx.fillStyle = C.iron;
+      ctx.globalAlpha = 0.8;
+      ctx.fillRect(x + CELL/2 - 2, y + CELL/2 - 6, 4, 12);
+      ctx.fillRect(x + CELL/2 - 6, y + CELL/2 - 2, 12, 4);
+      ctx.globalAlpha = 1;
+      break;
+
+    case 'miner':
+    case 'smelter':
+    case 'assembler': {
+      const colors = {
+        miner: [C.miner, C.minerBorder],
+        smelter: [C.smelter, C.smelterBorder],
+        assembler: [C.assembler, C.assemblerBorder],
+      };
+      const [fill, border] = colors[b.type];
+      // Bordered box matching real game
+      ctx.strokeStyle = border;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x + 3, y + 3, CELL - 6, CELL - 6);
+      ctx.fillStyle = fill;
+      ctx.globalAlpha = 0.15;
+      ctx.fillRect(x + 3, y + 3, CELL - 6, CELL - 6);
+      ctx.globalAlpha = 1;
+      // Label
+      ctx.fillStyle = fill;
+      ctx.font = 'bold 14px Menlo, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(b.label, x + CELL/2, y + CELL/2);
+      ctx.textAlign = 'start';
+      ctx.textBaseline = 'alphabetic';
+      break;
+    }
+
+    case 'belt':
+      ctx.fillStyle = C.belt;
+      ctx.globalAlpha = 0.4;
+      ctx.fillRect(x + 8, y + 10, CELL - 16, CELL - 20);
+      ctx.globalAlpha = 1;
+      break;
+
+    case 'rl':
+    case 'waf':
+    case 'auth':
+    case 'cb': {
+      const dColors = { rl: C.rl, waf: C.waf, auth: C.auth, cb: C.cb };
+      const color = dColors[b.type];
+      // Range circle
+      ctx.fillStyle = color;
+      ctx.globalAlpha = 0.06;
+      ctx.beginPath();
+      ctx.arc(x + CELL/2, y + CELL/2, CELL * 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 0.12;
+      ctx.beginPath();
+      ctx.arc(x + CELL/2, y + CELL/2, CELL * 1.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      // Tower
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x + 3, y + 3, CELL - 6, CELL - 6);
+      ctx.fillStyle = color;
+      ctx.globalAlpha = 0.2;
+      ctx.fillRect(x + 3, y + 3, CELL - 6, CELL - 6);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = color;
+      ctx.font = 'bold 13px Menlo, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(b.label, x + CELL/2, y + CELL/2);
+      ctx.textAlign = 'start';
+      ctx.textBaseline = 'alphabetic';
+      break;
+    }
+  }
+}
+
+function spawnEnemies() {
+  ENEMY_TYPES.forEach(type => {
+    for (let i = 0; i < type.count; i++) {
+      enemies.push({
+        x: GRID + Math.random() * 4,
+        y: 2 + Math.random() * 16,
+        targetX: 6 + Math.random() * 5,
+        targetY: 5 + Math.random() * 6,
+        speed: type.speed + Math.random() * 0.004,
+        color: type.color,
+        name: type.name,
+        alive: true,
+        pulsePhase: Math.random() * Math.PI * 2,
+      });
+    }
+  });
+}
+
+function updateEnemies() {
+  enemies.forEach(e => {
+    if (!e.alive) return;
+    const dx = e.targetX - e.x;
+    const dy = e.targetY - e.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist > 0.3) {
+      e.x += (dx / dist) * e.speed;
+      e.y += (dy / dist) * e.speed;
+    }
+  });
+}
+
+function drawEnemies(time) {
+  enemies.forEach(e => {
+    if (!e.alive) return;
+    const px = e.x * CELL;
+    const py = e.y * CELL;
+
+    // Glow
+    ctx.fillStyle = e.color;
+    ctx.globalAlpha = 0.12 + 0.08 * Math.sin(time * 0.004 + e.pulsePhase);
+    ctx.beginPath();
+    ctx.arc(px, py, 10, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Core dot (small, like real game)
+    ctx.globalAlpha = 0.9;
+    ctx.beginPath();
+    ctx.arc(px, py, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+}
+
+function updateDefenses() {
+  if (frame % 45 !== 0) return;
+  const defs = buildings.filter(b => b.defense && defensesPlaced);
+  defs.forEach(d => {
+    const range = 2.5;
+    const cx = d.x + 0.5;
+    const cy = d.y + 0.5;
+    const dColors = { rl: C.rl, waf: C.waf, auth: C.auth, cb: C.cb };
+    enemies.forEach(e => {
+      if (!e.alive) return;
+      const dist = Math.sqrt((e.x - cx) ** 2 + (e.y - cy) ** 2);
+      if (dist < range) {
+        projectiles.push({
+          sx: cx * CELL, sy: cy * CELL,
+          tx: e.x * CELL, ty: e.y * CELL,
+          progress: 0,
+          color: dColors[d.type] || '#5af78e',
+        });
+      }
+    });
+  });
+}
+
+function drawProjectiles() {
+  for (let i = projectiles.length - 1; i >= 0; i--) {
+    const p = projectiles[i];
+    p.progress += 0.06;
+    if (p.progress >= 1) {
+      projectiles.splice(i, 1);
+      continue;
+    }
+    const x = p.sx + (p.tx - p.sx) * p.progress;
+    const y = p.sy + (p.ty - p.sy) * p.progress;
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = 1 - p.progress * 0.6;
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+    // Trail
+    ctx.globalAlpha = 0.2;
+    const tx = p.sx + (p.tx - p.sx) * (p.progress - 0.1);
+    const ty = p.sy + (p.ty - p.sy) * (p.progress - 0.1);
+    ctx.beginPath();
+    ctx.arc(tx, ty, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+// Animated belt items
+let beltTick = 0;
+function drawBeltItems() {
+  beltTick += 0.03;
+  buildings.filter(b => b.type === 'belt').forEach((b, i) => {
+    const phase = (beltTick + i * 0.4) % 1;
+    if (phase < 0.5) {
+      ctx.fillStyle = C.beltItem;
+      ctx.globalAlpha = 0.6;
+      ctx.beginPath();
+      ctx.arc(b.x * CELL + CELL/2, b.y * CELL + CELL/2, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  });
+}
+
+// Log entries
+const logPanel = document.getElementById('logPanel');
+const logMessages = [
+  { time: '12:47:40', text: 'Wave 1 incoming → ddos_bot', cls: 'log-red' },
+  { time: '12:47:41', text: 'ddos_bot spawned at (19,4)', cls: 'log-red' },
+  { time: '12:47:42', text: 'sql_inject spawned at (19,8)', cls: 'log-red' },
+  { time: '12:47:44', text: 'Rate Limiter engaged at (10,5)', cls: 'log-green' },
+  { time: '12:47:45', text: 'WAF blocking sql_inject', cls: 'log-green' },
+  { time: '12:47:46', text: 'Auth Middleware intercepted', cls: 'log-green' },
+  { time: '12:47:48', text: 'Throughput holding at 18.4/min', cls: 'log-yellow' },
+  { time: '12:47:50', text: 'Circuit Breaker activated', cls: 'log-green' },
+  { time: '12:47:52', text: 'ddos_bot eliminated', cls: 'log-white' },
+  { time: '12:47:53', text: 'Uptime: 99.97%', cls: 'log-green' },
+];
+
+function addLogEntry(msg) {
+  const el = document.createElement('div');
+  el.className = 'log-entry';
+  el.innerHTML = `<span class="log-time">${msg.time}</span> <span class="${msg.cls}">${msg.text}</span>`;
+  logPanel.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('visible'));
+  // Keep last 8 entries visible
+  while (logPanel.children.length > 8) {
+    logPanel.removeChild(logPanel.firstChild);
+  }
+}
+
+let logIndex = 0;
+
+// Defense placement animation
+function placeDefenses() {
+  defensesPlaced = true;
+  const defList = document.getElementById('defenseList');
+  defList.innerHTML = `
+    <div style="color:#5af78e">T Rate Limiter ×2</div>
+    <div style="color:#f0883e">W WAF ×1</div>
+    <div style="color:#57c7ff">@ Auth MW ×1</div>
+    <div style="color:#f3f99d">◆ Circuit Breaker ×1</div>
+  `;
+}
+
+// Main game loop
+function gameLoop(time) {
+  drawGrid();
+  buildings.forEach(drawBuilding);
+  drawBeltItems();
+
+  if (frame === 60) {
+    spawnEnemies();
+    enemiesSpawned = true;
+  }
+
+  if (frame === 120) {
+    placeDefenses();
+  }
+
+  if (enemiesSpawned) {
+    updateEnemies();
+    if (defensesPlaced) {
+      updateDefenses();
+    }
+    drawProjectiles();
+    drawEnemies(time);
+  }
+
+  // Add log entries periodically
+  if (frame > 80 && frame % 40 === 0 && logIndex < logMessages.length) {
+    addLogEntry(logMessages[logIndex]);
+    logIndex++;
+  }
+
+  frame++;
+  requestAnimationFrame(gameLoop);
+}
+
+// Init — reveal UI elements
+setTimeout(() => {
+  document.getElementById('topBar').classList.add('visible');
+}, 200);
+setTimeout(() => {
+  document.getElementById('sidebarLeft').classList.add('visible');
+  document.getElementById('sidebarRight').classList.add('visible');
+}, 400);
+setTimeout(() => {
+  requestAnimationFrame(gameLoop);
+}, 600);
+</script>
+</body>
+</html>

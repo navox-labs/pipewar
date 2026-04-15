@@ -7,3 +7,11 @@
 - FRONTEND_ORIGIN secret must be set via `fly secrets set` before first deploy — not in fly.toml
 - vercel.json env vars point at pipewar-backend.fly.dev — update app name in fly.toml if the Fly app name changes
 - Security headers in vercel.json mirror those already in next.config.ts — Vercel layer + Next.js layer both apply
+
+## 2026-04-14 -- Bug fix deployment pass
+- 8 critical bugs committed and pushed to main (commit 206ca01)
+- Frontend auto-deployed to Vercel via git push to main
+- flyctl not installed on this machine -- installed via brew install flyctl (0.4.34)
+- flyctl requires interactive browser login -- no FLY_API_TOKEN or ~/.fly/config.yml present
+- Backend deploy BLOCKED on auth -- user must run: flyctl auth login && flyctl deploy
+- Alternative: set FLY_API_TOKEN env var and re-run flyctl deploy for non-interactive flow

@@ -30,3 +30,29 @@
 - Bug #8: Added applyBuildingPlaced/applyBuildingRemoved actions to gameStore.ts; wired building_placed and building_removed cases in useWebSocket.ts
 - Test count: 56 -> 65 (9 new unit tests added across test_defense.py and test_production.py)
 - _push_outputs is a module-level function (not method) -- import it explicitly in game_engine.py
+
+## 2026-04-14 -- Frontend redesign: scene3-gameplay.html visual style
+- New color palette: bg #0b1622, accent #5af78e, borders #1a2a3a, grid #0e1a27
+- Font changed from JetBrains Mono to Menlo, Monaco, 'Courier New', monospace (system font, no Google Fonts import)
+- globals.css: removed @import for Google Fonts, updated all --color-pw-* CSS variables
+- constants.ts: new COLORS map, added BUILDING_COLORS (per-type glyph colors: miner=#57c7ff, smelter=#f3f99d, assembler=#ff6ac1, rl=#5af78e, waf=#f0883e, auth=#57c7ff, cb=#f3f99d)
+- GameCanvas.tsx: grid dots at intersections (1.5px arc), faint 0.3px grid lines, scene3-style building tiles (colored border + 0.15 alpha fill), attacker glow (pulsing arc radius 10), trail as small arcs, defense range circles, hover preview with outline box
+- BuildPanel.tsx: 160px width, 2-col grid tiles with colored glyph (fontSize 14 bold), key [N] label, name; selected tile has border #57c7ff + bg #122238
+- MetricsPanel.tsx: 200px, defense grouped by type (glyph + name x count), attacker color map for wave types, event log uses slice(-8) for last 8 entries
+- HUD.tsx: uptime 20px bold #5af78e, pause button border #5af78e, wave info at right
+- WaveAlert.tsx: positioned below HUD (top:48), red dot + bold red "WAVE N INCOMING" text
+- GameOverModal.tsx: dark #0d1926 bg, accent border, ghost button style (transparent fill, colored border)
+- TutorialOverlay.tsx: #0d1926 bg, #5af78e accent, ghost next button style
+- LandingPage.tsx: #0b1622 bg, #5af78e title, ghost button style
+- Build: 0 errors, 0 warnings (only pre-existing workspace lockfile warning from turbopack)
+
+## 2026-04-14 — Refactor: inline styles -> Tailwind CSS
+- Tailwind v4 custom colors referenced as `text-pw-*`, `bg-pw-*`, `border-pw-*` (defined in @theme inline block in globals.css)
+- Added new color tokens: --color-pw-text-faint (#7090b0), --color-pw-text-hint (#5a7a9a), --color-pw-chain (#8aa0b8), --color-pw-building-selected-bg, --color-pw-building-tile-bg, --color-pw-building-selected-border, --color-pw-building-tile-border, --color-pw-canvas-border (#1a2a3a), --color-pw-connecting (#6b7280)
+- Dynamic/computed colors (uptimeColor, accentColor win/lose, glyphColor per building type, attackerColor per attacker type, eventColor per event type) must stay as inline style={{ color }} since they're runtime values
+- Dynamic border/bg for BuildingTile (selected state) stays inline since it's prop-driven -- can't use Tailwind conditionals with non-standard hex values
+- WaveAlert opacity stays inline (fading ? 0 : 1 is a runtime value)
+- GameCanvas: canvas drawing code (ctx.*) untouched; only JSX wrapper converted; cursor stays inline (dynamic), border converted to border-pw-canvas-border
+- annotationStyle in TutorialOverlay stays inline -- colors come from the highlight prop (dynamic per-step)
+- hover onMouseEnter/onMouseLeave handlers stay as JS for interactive elements with computed colors (buttons that swap between accentColor states)
+- Build: 0 errors, 0 warnings (only pre-existing workspace lockfile warning from turbopack)
