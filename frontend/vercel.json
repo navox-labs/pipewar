@@ -3,10 +3,6 @@
   "buildCommand": "npm run build",
   "installCommand": "npm ci",
   "outputDirectory": ".next",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "https://pipewar-backend-588857514802.us-central1.run.app",
-    "NEXT_PUBLIC_WS_URL": "wss://pipewar-backend-588857514802.us-central1.run.app"
-  },
   "headers": [
     {
       "source": "/(.*)",
