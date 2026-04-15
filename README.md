@@ -6,7 +6,8 @@ Build production pipelines. Defend against cyber attacks. Produce 20 Advanced Ci
 [![Built with Navox Agents](https://img.shields.io/badge/built%20with-Navox%20Agents-5af78e)](https://github.com/navox-labs/agents)
 [![Play Now](https://img.shields.io/badge/play-now-ff4757)](https://frontend-beta-five-83.vercel.app)
 
-![PipeWar Gameplay](gameplay.gif)
+<img width="2752" height="1536" alt="Game Poster" src="https://github.com/user-attachments/assets/fe20fd2f-9e7a-4aa5-a5e2-b112074471e4" />
+
 
 ---
 
