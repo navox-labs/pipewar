@@ -54,5 +54,5 @@ kill_timeout = "30s"        # give the engine time to save all active games
     tls_skip_verify = false
 
 [[vm]]
-  size = "dedicated-cpu-2x"
+  size = "performance-2x"
   memory = "2gb"
