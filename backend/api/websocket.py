@@ -90,19 +90,25 @@ async def websocket_endpoint(websocket: WebSocket, game_id: str):
         return
 
     # --- C-03: validate session ---
-    # Try cookie first, fall back to query param (needed when REST goes
-    # through Vercel proxy but WS connects directly to Fly.io)
-    session_id = websocket.cookies.get(COOKIE_NAME)
-    if not session_id:
-        session_id = websocket.query_params.get("session")
+    # Prefer query param (always fresh from createSession()) over cookie
+    # which may be stale from a previous deployment or blocked by
+    # third-party cookie restrictions.
+    session_id = websocket.query_params.get("session") or websocket.cookies.get(COOKIE_NAME)
     if not session_id:
         await websocket.close(code=4001)
         return
 
     session = await get_session(session_id)
     if not session:
-        await websocket.close(code=4001)
-        return
+        # Cookie session may be stale — try the other source as fallback
+        fallback_id = websocket.cookies.get(COOKIE_NAME) if websocket.query_params.get("session") else websocket.query_params.get("session")
+        if fallback_id and fallback_id != session_id:
+            session = await get_session(fallback_id)
+            if session:
+                session_id = fallback_id
+        if not session:
+            await websocket.close(code=4001)
+            return
 
     # --- C-03: validate game ownership ---
     game = await get_game_by_id(game_id)
