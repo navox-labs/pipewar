@@ -10,6 +10,7 @@ import { MetricsPanel } from "@/components/game/MetricsPanel";
 import { WaveAlert } from "@/components/game/WaveAlert";
 import { GameOverModal } from "@/components/game/GameOverModal";
 import { TutorialOverlay } from "@/components/game/TutorialOverlay";
+import { ServerFullPage } from "@/components/ServerFullPage";
 import { createSession, getCurrentGame, createGame } from "@/lib/api";
 import { BUILDING_PANEL } from "@/lib/constants";
 import type { BuildingType, Direction } from "@/lib/types";
@@ -30,6 +31,7 @@ export default function GamePage() {
   const router = useRouter();
   const { send } = useWebSocket(gameId);
   const [viewportOk, setViewportOk] = useState(true);
+  const [serverFull, setServerFull] = useState(false);
 
   // Viewport size check
   useEffect(() => {
@@ -53,7 +55,11 @@ export default function GamePage() {
         setGameId(game.game_id);
       } catch (e) {
         console.error("Game init failed:", e);
-        router.push("/");
+        if (e instanceof Error && e.message.includes("503")) {
+          setServerFull(true);
+        } else {
+          router.push("/");
+        }
       }
     }
     if (!gameId) init();
@@ -126,6 +132,10 @@ export default function GamePage() {
   const handlePause = useCallback(() => {
     send({ type: "toggle_pause" });
   }, [send]);
+
+  if (serverFull) {
+    return <ServerFullPage />;
+  }
 
   if (!viewportOk) {
     return (

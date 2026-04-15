@@ -28,16 +28,16 @@ async def get_db() -> aiosqlite.Connection:
 
 
 async def _init_schema():
-    """Run migrations on startup."""
-    migration_path = Path(__file__).parent / "migrations" / "001_initial.sql"
-    sql = migration_path.read_text()
-    # SQLite doesn't support all Postgres syntax; we execute statement by statement
-    statements = [s.strip() for s in sql.split(";") if s.strip()]
-    for stmt in statements:
-        try:
-            await _db.execute(stmt)
-        except Exception:
-            pass  # tables already exist -- idempotent
+    """Run all migrations on startup."""
+    migrations_dir = Path(__file__).parent / "migrations"
+    for migration_file in sorted(migrations_dir.glob("*.sql")):
+        sql = migration_file.read_text()
+        statements = [s.strip() for s in sql.split(";") if s.strip()]
+        for stmt in statements:
+            try:
+                await _db.execute(stmt)
+            except Exception:
+                pass  # tables already exist -- idempotent
     await _db.commit()
 
 

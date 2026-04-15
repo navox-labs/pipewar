@@ -64,3 +64,13 @@ export async function deleteCurrentGame(): Promise<void> {
     credentials: "include",
   });
 }
+
+export async function joinWaitlist(email: string): Promise<{ status: string }> {
+  const res = await fetch(`${API_BASE}/api/waitlist`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  if (!res.ok) throw new Error(`Waitlist failed: ${res.status}`);
+  return res.json();
+}

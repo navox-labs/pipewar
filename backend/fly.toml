@@ -54,6 +54,5 @@ kill_timeout = "30s"        # give the engine time to save all active games
     tls_skip_verify = false
 
 [[vm]]
-  size = "shared-cpu-1x"
-  memory = "512mb"
-  # Upgrade to dedicated-cpu-1x if tick loop latency becomes an issue
+  size = "dedicated-cpu-2x"
+  memory = "2gb"

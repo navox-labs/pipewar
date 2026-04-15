@@ -3,12 +3,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSession, getSessionMe, createGame, getCurrentGame } from "@/lib/api";
 import { useGameStore } from "@/stores/gameStore";
+import { ServerFullPage } from "@/components/ServerFullPage";
 
 const FONT = "Menlo, Monaco, 'Courier New', monospace";
 
 export function LandingPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [serverFull, setServerFull] = useState(false);
   const router = useRouter();
   const setGameId = useGameStore((s) => s.setGameId);
 
@@ -22,7 +24,11 @@ export function LandingPage() {
       router.push("/game");
     } catch (e) {
       console.error(e);
-      setError(true);
+      if (e instanceof Error && e.message.includes("503")) {
+        setServerFull(true);
+      } else {
+        setError(true);
+      }
       setLoading(false);
     }
   };
@@ -42,6 +48,10 @@ export function LandingPage() {
       setLoading(false);
     }
   };
+
+  if (serverFull) {
+    return <ServerFullPage />;
+  }
 
   return (
     <div

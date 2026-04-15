@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 
 from backend.config import FRONTEND_ORIGIN
 from backend.db.connection import get_db, close_db
-from backend.api import sessions, games, websocket
+from backend.api import sessions, games, websocket, waitlist
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
@@ -54,6 +54,7 @@ async def add_security_headers(request: Request, call_next):
 app.include_router(sessions.router, prefix="/api")
 app.include_router(games.router, prefix="/api")
 app.include_router(websocket.router, prefix="/api")
+app.include_router(waitlist.router, prefix="/api")
 
 # ---------------------------------------------------------------------------
 # Lifecycle
