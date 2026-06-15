@@ -6,7 +6,7 @@ export const CANVAS_SIZE = GRID_SIZE * CELL_SIZE; // 640
 // REST goes through Vercel rewrites (same-origin cookies).
 // WebSocket connects directly to Fly.io (Vercel can't proxy WS).
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
-export const WS_BASE = process.env.NEXT_PUBLIC_WS_URL || "wss://pipewar-backend.fly.dev";
+export const WS_BASE = process.env.NEXT_PUBLIC_WS_URL || "";
 
 // Color palette — scene3 dark navy palette (also used for canvas rendering)
 export const COLORS = {

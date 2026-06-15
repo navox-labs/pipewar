@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const BACKEND_URL = process.env.BACKEND_URL || "https://pipewar-backend.fly.dev";
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8080";
 
 const nextConfig: NextConfig = {
   // Proxy /api/* to the backend so cookies are same-origin
